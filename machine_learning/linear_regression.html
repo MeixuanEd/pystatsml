@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linear methods for regression &#8212; Statistics and Machine Learning in Python 0.4 beta documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Linear classification" href="linear_classification.html" />
+    <link rel="prev" title="Clustering" href="clustering.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="linear-methods-for-regression">
+<h1>Linear methods for regression<a class="headerlink" href="#linear-methods-for-regression" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default" id="id1">
+<img alt="Linear regression" src="../_images/linear_regression.png" />
+<p class="caption"><span class="caption-text">Linear regression</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="ordinary-least-squares">
+<h2>Ordinary least squares<a class="headerlink" href="#ordinary-least-squares" title="Permalink to this headline">¶</a></h2>
+<p>Linear regression models the <strong>output</strong>, or <strong>target</strong> variable
+<span class="math notranslate nohighlight">\(y \in \mathrm{R}\)</span> as a linear combination of the
+<span class="math notranslate nohighlight">\(P\)</span>-dimensional input <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{P}\)</span>. Let
+<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> be the <span class="math notranslate nohighlight">\(N \times P\)</span> matrix with each row an
+input vector (with a 1 in the first position), and similarly let
+<span class="math notranslate nohighlight">\(\mathbf{y}\)</span> be the <span class="math notranslate nohighlight">\(N\)</span>-dimensional vector of outputs in the
+<strong>training set</strong>, the linear model will predict the <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>
+given <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> using the <strong>parameter vector</strong>, or <strong>weight
+vector</strong> <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^P\)</span> according to</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon} \in \mathrm{R}^N\)</span> are the
+<strong>residuals</strong>, or the errors of the prediction. The <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>
+is found by minimizing an <strong>objective function</strong>, which is the <strong>loss
+function</strong>, <span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>, i.e. the error measured on the data.
+This error is the <strong>sum of squared errors (SSE) loss</strong>.</p>
+<p>Minimizing the SSE is the Ordinary Least Square <strong>OLS</strong> regression as
+objective function. which is a simple <strong>ordinary least squares (OLS)</strong>
+minimization whose analytic solution is:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{w}_{\text{OLS}} = (\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}\]</div>
+<p>The gradient of the loss:</p>
+<div class="math notranslate nohighlight">
+\[\partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 \sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i)\]</div>
+</div>
+<div class="section" id="linear-regression-with-scikit-learn">
+<h2>Linear regression with scikit-learn<a class="headerlink" href="#linear-regression-with-scikit-learn" title="Permalink to this headline">¶</a></h2>
+<p>Scikit learn offer many models for supervised learning, and they all
+follow the same application programming interface (API), namely:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Estimator</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="c1">#import warnings</span>
+<span class="c1">#warnings.filterwarnings(action=&#39;once&#39;)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">metrics</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># Fit Ordinary Least Squares: OLS</span>
+<span class="n">csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://raw.githubusercontent.com/neurospin/pystatsml/master/datasets/Advertising.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">csv</span><span class="p">[[</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">csv</span><span class="p">[</span><span class="s1">&#39;Sales&#39;</span><span class="p">]</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared =&quot;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coefficients =&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">csv</span><span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">],</span> <span class="n">csv</span><span class="p">[</span><span class="s1">&#39;Radio&#39;</span><span class="p">],</span> <span class="n">csv</span><span class="p">[</span><span class="s1">&#39;Sales&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+<span class="n">xx1</span><span class="p">,</span> <span class="n">xx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">csv</span><span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">csv</span><span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">csv</span><span class="p">[</span><span class="s1">&#39;Radio&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">csv</span><span class="p">[</span><span class="s1">&#39;Radio&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+
+
+<span class="n">XX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">xx1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">xx2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+
+<span class="n">yy</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">XX</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx1</span><span class="p">,</span> <span class="n">xx2</span><span class="p">,</span> <span class="n">yy</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xx1</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;TV&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Radio&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Sales&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">-</span><span class="n">squared</span> <span class="o">=</span> <span class="mf">0.8971942610828956</span>
+<span class="n">Coefficients</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.04575482</span> <span class="mf">0.18799423</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_regression_3_1.png" src="../_images/linear_regression_3_1.png" />
+</div>
+<div class="section" id="overfitting">
+<h2>Overfitting<a class="headerlink" href="#overfitting" title="Permalink to this headline">¶</a></h2>
+<p>In statistics and machine learning, overfitting occurs when a
+statistical model describes random errors or noise instead of the
+underlying relationships. Overfitting generally occurs when a model is
+<strong>excessively complex</strong>, such as having <strong>too many parameters relative
+to the number of observations</strong>. A model that has been overfit will
+generally have poor predictive performance, as it can exaggerate minor
+fluctuations in the data.</p>
+<p>A learning algorithm is trained using some set of training samples. If
+the learning algorithm has the capacity to overfit the training samples
+the performance on the <strong>training sample set</strong> will improve while the
+performance on unseen <strong>test sample set</strong> will decline.</p>
+<p>The overfitting phenomenon has three main explanations: - excessively
+complex models, - multicollinearity, and - high dimensionality.</p>
+<div class="section" id="model-complexity">
+<h3>Model complexity<a class="headerlink" href="#model-complexity" title="Permalink to this headline">¶</a></h3>
+<p>Complex learners with too many parameters relative to the number of
+observations may overfit the training dataset.</p>
+</div>
+<div class="section" id="multicollinearity">
+<h3>Multicollinearity<a class="headerlink" href="#multicollinearity" title="Permalink to this headline">¶</a></h3>
+<p>Predictors are highly correlated, meaning that one can be linearly
+predicted from the others. In this situation the coefficient estimates
+of the multiple regression may change erratically in response to small
+changes in the model or the data. Multicollinearity does not reduce the
+predictive power or reliability of the model as a whole, at least not
+within the sample data set; it only affects computations regarding
+individual predictors. That is, a multiple regression model with
+correlated predictors can indicate how well the entire bundle of
+predictors predicts the outcome variable, but it may not give valid
+results about any individual predictor, or about which predictors are
+redundant with respect to others. In case of perfect multicollinearity
+the predictor matrix is singular and therefore cannot be inverted. Under
+these circumstances, for a general linear model
+<span class="math notranslate nohighlight">\(\mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon}\)</span>,
+the ordinary least-squares estimator,
+<span class="math notranslate nohighlight">\(\mathbf{w}_{OLS} = (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T \mathbf{y}\)</span>,
+does not exist.</p>
+<p>An example where correlated predictor may produce an unstable model
+follows:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">bv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>             <span class="c1"># business volume</span>
+<span class="n">tax</span>  <span class="o">=</span> <span class="o">.</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bv</span>                                  <span class="c1"># Tax</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span> <span class="o">*</span> <span class="n">bv</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">-.</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># business potential</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">bv</span><span class="p">,</span> <span class="n">tax</span><span class="p">])</span>
+<span class="n">beta_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># true solution</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Since tax and bv are correlated, there is an infinite number of linear combinations</span>
+<span class="sd">leading to the same prediction.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># 10 times the bv then subtract it 9 times using the tax variable:</span>
+<span class="n">beta_medium</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-.</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/.</span><span class="mi">2</span><span class="p">)])</span>
+<span class="c1"># 100 times the bv then subtract it 99 times using the tax variable:</span>
+<span class="n">beta_large</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">.</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="o">-.</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">99</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/.</span><span class="mi">2</span><span class="p">)])</span>
+
+<span class="c1"># Check that all model lead to the same result</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_star</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_medium</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_star</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_large</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Multicollinearity between the predictors: business volumes and tax
+produces unstable models with arbitrary large coefficients.
+<img alt="Multicollinearity between the predictors" src="../_images/ols_multicollinearity.png" /></p>
+<p>Dealing with multicollinearity:</p>
+<ul class="simple">
+<li><p>Regularisation by e.g. <span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkage: Introduce a bias in
+the solution by making <span class="math notranslate nohighlight">\((X^T X)^{-1}\)</span> non-singular. See
+<span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkage.</p></li>
+<li><p>Feature selection: select a small number of features. See: Isabelle
+Guyon and André Elisseeff <em>An introduction to variable and feature
+selection</em> The Journal of Machine Learning Research, 2003.</p></li>
+<li><p>Feature selection: select a small number of features using
+<span class="math notranslate nohighlight">\(\ell_1\)</span> shrinkage.</p></li>
+<li><p>Extract few independent (uncorrelated) features using e.g. principal
+components analysis (PCA), partial least squares regression (PLS-R)
+or regression methods that cut the number of predictors to a smaller
+set of uncorrelated components.</p></li>
+</ul>
+</div>
+<div class="section" id="high-dimensionality">
+<h3>High dimensionality<a class="headerlink" href="#high-dimensionality" title="Permalink to this headline">¶</a></h3>
+<p>High dimensions means a large number of input features. Linear predictor
+associate one parameter to each input feature, so a high-dimensional
+situation (<span class="math notranslate nohighlight">\(P\)</span>, number of features, is large) with a relatively
+small number of samples <span class="math notranslate nohighlight">\(N\)</span> (so-called large <span class="math notranslate nohighlight">\(P\)</span> small
+<span class="math notranslate nohighlight">\(N\)</span> situation) generally lead to an overfit of the training data.
+Thus it is generally a bad idea to add many input features into the
+learner. This phenomenon is called the <strong>curse of dimensionality</strong>.</p>
+<p>One of the most important criteria to use when choosing a learning
+algorithm is based on the relative size of <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(N\)</span>.</p>
+<ul class="simple">
+<li><p>Remenber that the “covariance” matrix <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span>
+used in the linear model is a <span class="math notranslate nohighlight">\(P \times P\)</span> matrix of rank
+<span class="math notranslate nohighlight">\(\min(N, P)\)</span>. Thus if <span class="math notranslate nohighlight">\(P &gt; N\)</span> the equation system is
+overparameterized and admit an infinity of solutions that might be
+specific to the learning dataset. See also ill-conditioned or
+singular matrices.</p></li>
+<li><p>The sampling density of <span class="math notranslate nohighlight">\(N\)</span> samples in an <span class="math notranslate nohighlight">\(P\)</span>-dimensional
+space is proportional to <span class="math notranslate nohighlight">\(N^{1/P}\)</span>. Thus a high-dimensional
+space becomes very sparse, leading to poor estimations of samples
+densities.</p></li>
+<li><p>Another consequence of the sparse sampling in high dimensions is that
+all sample points are close to an edge of the sample. Consider
+<span class="math notranslate nohighlight">\(N\)</span> data points uniformly distributed in a
+<span class="math notranslate nohighlight">\(P\)</span>-dimensional unit ball centered at the origin. Suppose we
+consider a nearest-neighbor estimate at the origin. The median
+distance from the origin to the closest data point is given by the
+expression</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[d(P, N) = \left(1 - \frac{1}{2}^N\right)^{1/P}.\]</div>
+<p>A more complicated expression exists for the mean distance to the
+closest point. For N = 500, P = 10 , <span class="math notranslate nohighlight">\(d(P, N ) \approx 0.52\)</span>, more
+than halfway to the boundary. Hence most data points are closer to the
+boundary of the sample space than to any other data point. The reason
+that this presents a problem is that prediction is much more difficult
+near the edges of the training sample. One must extrapolate from
+neighboring sample points rather than interpolate between them. (Source:
+T Hastie, R Tibshirani, J Friedman. <em>The Elements of Statistical
+Learning: Data Mining, Inference, and Prediction.</em> Second Edition,
+2009.)</p>
+<ul class="simple">
+<li><p>Structural risk minimization provides a theoretical background of
+this phenomenon. (See VC dimension.)</p></li>
+<li><p>See also bias–variance trade-off.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="c1"># nicer plots</span>
+
+<span class="k">def</span> <span class="nf">fit_on_increasing_size</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">n_features_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">snr</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n_features</span> <span class="ow">in</span> <span class="n">n_features_</span><span class="p">:</span>
+        <span class="c1"># Sample the dataset (* 2 nb of samples)</span>
+        <span class="n">n_features_info</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_features</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># Make reproducible</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span>
+        <span class="n">beta</span><span class="p">[:</span><span class="n">n_features_info</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">Xbeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span>  <span class="n">Xbeta</span> <span class="o">+</span> <span class="n">eps</span>
+        <span class="c1"># Split the dataset into train and test sample</span>
+        <span class="n">Xtrain</span><span class="p">,</span> <span class="n">Xtest</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">,</span> <span class="p">:],</span> <span class="n">X</span><span class="p">[</span><span class="n">n_samples</span><span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">ytrain</span><span class="p">,</span> <span class="n">ytest</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">n_samples</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">n_samples</span><span class="p">:]</span>
+        <span class="c1"># fit/predict</span>
+        <span class="n">lr</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span>
+        <span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">)</span>
+        <span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span>
+        <span class="n">snr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Xbeta</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">eps</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+        <span class="n">r2_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">ytrain</span><span class="p">,</span> <span class="n">y_pred_train</span><span class="p">))</span>
+        <span class="n">r2_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">y_pred_test</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">n_features_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r2_train</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r2_test</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">snr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_r2_snr</span><span class="p">(</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">xvline</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Two scales plot. Left y-axis: train test r-squared. Right y-axis SNR.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train r-squared&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test r-squared&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xvline</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of input features&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;r-squared&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Prediction perf.&quot;</span><span class="p">)</span>
+    <span class="n">ax_right</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax_right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_features_</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;SNR&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax_right</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;SNR&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">tl</span> <span class="ow">in</span> <span class="n">ax_right</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="n">tl</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="c1"># Model = linear regression</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
+
+<span class="c1"># Fit models on dataset</span>
+<span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">snr</span> <span class="o">=</span> <span class="n">fit_on_increasing_size</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">mod</span><span class="p">)</span>
+
+<span class="n">argmax</span> <span class="o">=</span> <span class="n">n_features</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_test</span><span class="p">)]</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Left pane: all features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">argmax</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Right pane: Zoom on 100 first features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">r2_train</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span> <span class="n">r2_test</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">argmax</span><span class="p">,</span>
+            <span class="n">snr</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_regression_8_0.png" src="../_images/linear_regression_8_0.png" />
+</div>
+<div class="section" id="exercises">
+<h3>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h3>
+<p>Study the code above and:</p>
+<ul class="simple">
+<li><p>Describe the datasets: <span class="math notranslate nohighlight">\(N\)</span>: <code class="docutils literal notranslate"><span class="pre">nb_samples</span></code>, <span class="math notranslate nohighlight">\(P\)</span>:
+<code class="docutils literal notranslate"><span class="pre">nb_features</span></code>.</p></li>
+<li><p>What is <code class="docutils literal notranslate"><span class="pre">n_features_info</span></code>?</p></li>
+<li><p>Give the equation of the generative model.</p></li>
+<li><p>What is modified by the loop?</p></li>
+<li><p>What is the SNR?</p></li>
+</ul>
+<p>Comment the graph above, in terms of training and test performances:</p>
+<ul class="simple">
+<li><p>How does the train and test performance changes as a function of
+<span class="math notranslate nohighlight">\(x\)</span>?</p></li>
+<li><p>Is it the expected results when compared to the SNR?</p></li>
+<li><p>What can you conclude?</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="ridge-regression-ell-2-regularization">
+<h2>Ridge regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)<a class="headerlink" href="#ridge-regression-ell-2-regularization" title="Permalink to this headline">¶</a></h2>
+<p>Regarding linear models, overfitting generally leads to excessively
+complex solutions (coefficient vectors), accounting for noise or
+spurious correlations within predictors. <strong>Regularization</strong> aims to
+alleviate this phenomenon by constraining (biasing or reducing) the
+capacity of the learning algorithm in order to promote simple solutions.
+Regularization penalizes “large” solutions forcing the coefficients to
+be small, i.e. to shrink them toward zeros.</p>
+<p>The objective function <span class="math notranslate nohighlight">\(J(\mathbf{w})\)</span> to minimize with respect to
+<span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is composed of a loss function <span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>
+for goodness-of-fit and a penalty term <span class="math notranslate nohighlight">\(\Omega(\mathbf{w})\)</span>
+(regularization to avoid overfitting). This is a trade-off where the
+respective contribution of the loss and the penalty terms is controlled
+by the regularization parameter <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>Therefore the <strong>loss function</strong> <span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span> (generally the
+SSE) is combined with a <strong>penalty function</strong> <span class="math notranslate nohighlight">\(\Omega(\mathbf{w})\)</span>
+leading to the general form:</p>
+<div class="math notranslate nohighlight">
+\[J(\mathbf{w}) = L(\mathbf{w}) + \lambda \Omega(\mathbf{w})\]</div>
+<p>The respective contribution of the loss and the penalty is controlled by
+the <strong>regularization parameter</strong> <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>Ridge regression impose a <span class="math notranslate nohighlight">\(\ell_2\)</span> penalty on the coefficients,
+i.e. it penalizes with the Euclidean norm of the coefficients while
+minimizing SSE. The objective function becomes:</p>
+<p>The <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> that minimises <span class="math notranslate nohighlight">\(F_{Ridge}(\mathbf{w})\)</span> can
+be found by the following derivation:</p>
+<ul class="simple">
+<li><p>The solution adds a positive constant to the diagonal of
+<span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> before inversion. This makes the
+problem nonsingular, even if <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> is not of
+full rank, and was the main motivation behind ridge regression.</p></li>
+<li><p>Increasing <span class="math notranslate nohighlight">\(\lambda\)</span> shrinks the <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>
+coefficients toward 0.</p></li>
+<li><p>This approach <strong>penalizes</strong> the objective function by the <strong>Euclidian
+(:math:`ell_2`) norm</strong> of the coefficients such that solutions with
+large coefficients become unattractive.</p></li>
+</ul>
+<p>The gradient of the loss:</p>
+<div class="math notranslate nohighlight">
+\[\partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})\]</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+
+<span class="c1"># lambda is alpha!</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Fit models on dataset</span>
+<span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">snr</span> <span class="o">=</span> <span class="n">fit_on_increasing_size</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">mod</span><span class="p">)</span>
+
+<span class="n">argmax</span> <span class="o">=</span> <span class="n">n_features</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_test</span><span class="p">)]</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Left pane: all features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">argmax</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Right pane: Zoom on 100 first features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">r2_train</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span> <span class="n">r2_test</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">argmax</span><span class="p">,</span>
+            <span class="n">snr</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_regression_12_0.png" src="../_images/linear_regression_12_0.png" />
+<div class="section" id="exercice">
+<h3>Exercice<a class="headerlink" href="#exercice" title="Permalink to this headline">¶</a></h3>
+<p>What benefit has been obtained by using <span class="math notranslate nohighlight">\(\ell_2\)</span> regularization?</p>
+</div>
+</div>
+<div class="section" id="lasso-regression-ell-1-regularization">
+<h2>Lasso regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)<a class="headerlink" href="#lasso-regression-ell-1-regularization" title="Permalink to this headline">¶</a></h2>
+<p>Lasso regression penalizes the coefficients by the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm.
+This constraint will reduce (bias) the capacity of the learning
+algorithm. To add such a penalty forces the coefficients to be small,
+i.e. it shrinks them toward zero. The objective function to minimize
+becomes:</p>
+<p>This penalty forces some coefficients to be exactly zero, providing a
+feature selection property.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+
+<span class="c1"># lambda is alpha !</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Fit models on dataset</span>
+<span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">snr</span> <span class="o">=</span> <span class="n">fit_on_increasing_size</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">mod</span><span class="p">)</span>
+
+<span class="n">argmax</span> <span class="o">=</span> <span class="n">n_features</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_test</span><span class="p">)]</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Left pane: all features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">argmax</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Right pane: Zoom on 200 first features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">200</span><span class="p">],</span>
+            <span class="n">r2_train</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">200</span><span class="p">],</span> <span class="n">r2_test</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">200</span><span class="p">],</span>
+            <span class="n">argmax</span><span class="p">,</span>
+            <span class="n">snr</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">200</span><span class="p">],</span>
+            <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_regression_15_0.png" src="../_images/linear_regression_15_0.png" />
+<div class="section" id="sparsity-of-the-ell-1-norm">
+<h3>Sparsity of the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm<a class="headerlink" href="#sparsity-of-the-ell-1-norm" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="occams-razor">
+<h4>Occam’s razor<a class="headerlink" href="#occams-razor" title="Permalink to this headline">¶</a></h4>
+<p>Occam’s razor (also written as Ockham’s razor, and <strong>lex parsimoniae</strong>
+in Latin, which means law of parsimony) is a problem solving principle
+attributed to William of Ockham (1287-1347), who was an English
+Franciscan friar and scholastic philosopher and theologian. The
+principle can be interpreted as stating that <strong>among competing
+hypotheses, the one with the fewest assumptions should be selected</strong>.</p>
+</div>
+<div class="section" id="principle-of-parsimony">
+<h4>Principle of parsimony<a class="headerlink" href="#principle-of-parsimony" title="Permalink to this headline">¶</a></h4>
+<p>The simplest of two competing theories is to be preferred. Definition of
+parsimony: Economy of explanation in conformity with Occam’s razor.</p>
+<p>Among possible models with similar loss, choose the simplest one:</p>
+<ul class="simple">
+<li><p>Choose the model with the smallest coefficient vector, i.e. smallest
+<span class="math notranslate nohighlight">\(\ell_2\)</span> (<span class="math notranslate nohighlight">\(\|\mathbf{w}\|_2\)</span>) or <span class="math notranslate nohighlight">\(\ell_1\)</span>
+(<span class="math notranslate nohighlight">\(\|\mathbf{w}\|_1\)</span>) norm of <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>,
+i.e. <span class="math notranslate nohighlight">\(\ell_2\)</span> or <span class="math notranslate nohighlight">\(\ell_1\)</span> penalty. See also bias-variance
+tradeoff.</p></li>
+<li><p>Choose the model that uses the smallest number of predictors. In
+other words, choose the model that has many predictors with zero
+weights. Two approaches are available to obtain this: (i) Perform a
+feature selection as a preprocessing prior to applying the learning
+algorithm, or (ii) embed the feature selection procedure within the
+learning process.</p></li>
+</ul>
+</div>
+<div class="section" id="sparsity-induced-penalty-or-embedded-feature-selection-with-the-ell-1-penalty">
+<h4>Sparsity-induced penalty or embedded feature selection with the <span class="math notranslate nohighlight">\(\ell_1\)</span> penalty<a class="headerlink" href="#sparsity-induced-penalty-or-embedded-feature-selection-with-the-ell-1-penalty" title="Permalink to this headline">¶</a></h4>
+<p>The penalty based on the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm promotes <strong>sparsity</strong>
+(scattered, or not dense): it forces many coefficients to be exactly
+zero. This also makes the coefficient vector scattered.</p>
+<p>The figure bellow illustrates the OLS loss under a constraint acting on
+the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm of the coefficient vector. I.e., it illustrates
+the following optimization problem:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \underset{\mathbf{w}}{\text{minimize}} ~&amp; \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 \\
+    \text{subject to}                 ~&amp; \|\mathbf{w}\|_1 \leq 1.
+\end{aligned}\end{split}\]</div>
+<div class="figure align-default" id="id2">
+<img alt="Sparsity of L1 norm" src="../_images/l1_sparse.png" />
+<p class="caption"><span class="caption-text">Sparsity of L1 norm</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="optimization-issues">
+<h3>Optimization issues<a class="headerlink" href="#optimization-issues" title="Permalink to this headline">¶</a></h3>
+<p><em>Section to be completed</em></p>
+<ul class="simple">
+<li><p>No more closed-form solution.</p></li>
+<li><p>Convex but not differentiable.</p></li>
+<li><p>Requires specific optimization algorithms, such as the fast iterative
+shrinkage-thresholding algorithm (FISTA): Amir Beck and Marc
+Teboulle, <em>A Fast Iterative Shrinkage-Thresholding Algorithm for
+Linear Inverse Problems</em> SIAM J. Imaging Sci., 2009.</p></li>
+</ul>
+<p>The ridge penalty shrinks the coefficients toward zero. The figure
+illustrates: the OLS solution on the left. The <span class="math notranslate nohighlight">\(\ell_1\)</span> and
+<span class="math notranslate nohighlight">\(\ell_2\)</span> penalties in the middle pane. The penalized OLS in the
+right pane. The right pane shows how the penalties shrink the
+coefficients toward zero. The black points are the minimum found in each
+case, and the white points represents the true solution used to generate
+the data.</p>
+<div class="figure align-default" id="id3">
+<img alt=":math:`\ell_1` and :math:`\ell_2` shrinkages" src="../_images/ols_l1_l2.png" />
+<p class="caption"><span class="caption-text"><span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkages</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="elastic-net-regression-ell-2-ell-1-regularization">
+<h2>Elastic-net regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)<a class="headerlink" href="#elastic-net-regression-ell-2-ell-1-regularization" title="Permalink to this headline">¶</a></h2>
+<p>The Elastic-net estimator combines the <span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span>
+penalties, and results in the problem to</p>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> acts as a global penalty and <span class="math notranslate nohighlight">\(\rho\)</span> as an
+<span class="math notranslate nohighlight">\(\ell_1 / \ell_2\)</span> ratio.</p>
+<div class="section" id="rational">
+<h3>Rational<a class="headerlink" href="#rational" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>If there are groups of highly correlated variables, Lasso tends to
+arbitrarily select only one from each group. These models are
+difficult to interpret because covariates that are strongly
+associated with the outcome are not included in the predictive model.
+Conversely, the elastic net encourages a grouping effect, where
+strongly correlated predictors tend to be in or out of the model
+together.</p></li>
+<li><p>Studies on real world data and simulation studies show that the
+elastic net often outperforms the lasso, while enjoying a similar
+sparsity of representation.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">ElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Fit models on dataset</span>
+<span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">snr</span> <span class="o">=</span> <span class="n">fit_on_increasing_size</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">mod</span><span class="p">)</span>
+
+<span class="n">argmax</span> <span class="o">=</span> <span class="n">n_features</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_test</span><span class="p">)]</span>
+
+<span class="c1"># plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Left pane: all features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span><span class="p">,</span> <span class="n">argmax</span><span class="p">,</span> <span class="n">snr</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Right pane: Zoom on 100 first features</span>
+<span class="n">plot_r2_snr</span><span class="p">(</span><span class="n">n_features</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">r2_train</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span> <span class="n">r2_test</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">argmax</span><span class="p">,</span>
+            <span class="n">snr</span><span class="p">[</span><span class="n">n_features</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_regression_19_0.png" src="../_images/linear_regression_19_0.png" />
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">data visualization: Matplotlib &amp; Seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time Series in python</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear methods for regression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ordinary-least-squares">Ordinary least squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linear-regression-with-scikit-learn">Linear regression with scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overfitting">Overfitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ridge-regression-ell-2-regularization">Ridge regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lasso-regression-ell-1-regularization">Lasso regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elastic-net-regression-ell-2-ell-1-regularization">Elastic-net regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="non_linear_prediction.html">Non linear learning algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">Resampling Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="clustering.html" title="previous chapter">Clustering</a></li>
+      <li>Next: <a href="linear_classification.html" title="next chapter">Linear classification</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/machine_learning/linear_regression.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

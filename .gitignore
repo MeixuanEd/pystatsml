@@ -1,0 +1,17 @@
+*.pyc
+*~
+.nfs*
+~$*
+*.Rhistory
+*.aux
+*.bbl
+*.blg
+*.log
+.*.swp
+.ipynb_checkpoints
+notebooks/*.rst
+python/*.rst
+.spyderproject
+build/
+auto_gallery/
+

@@ -1,0 +1,23 @@
+My title
+========
+
+blah blah bla
+
+.. code:: ipython3
+
+    a = 2
+    print(a)
+
+
+.. parsed-literal::
+
+    2
+
+
+equation
+--------
+
+Linear model solution:
+
+:math:`\beta = (X'X)^{-1}X'y`
+
