@@ -192,6 +192,7 @@ dimensions along which data points exhibit the most variation.
     experience = np.random.normal(size=n_samples)
     salary = 1500 + experience + np.random.normal(size=n_samples, scale=.5)
     X = np.column_stack([experience, salary])
+    print(X.shape)
     
     # PCA using SVD
     X -= X.mean(axis=0)  # Centering is required
@@ -241,8 +242,13 @@ dimensions along which data points exhibit the most variation.
     plt.tight_layout()
 
 
+.. parsed-literal::
 
-.. image:: decomposition_files/decomposition_2_0.png
+    (100, 2)
+
+
+
+.. image:: decomposition_files/decomposition_2_1.png
 
 
 Principal components analysis (PCA)

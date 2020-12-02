@@ -180,6 +180,7 @@ dimensions along which data points exhibit the most variation.</p>
 <span class="n">experience</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
 <span class="n">salary</span> <span class="o">=</span> <span class="mi">1500</span> <span class="o">+</span> <span class="n">experience</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">scale</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">experience</span><span class="p">,</span> <span class="n">salary</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="c1"># PCA using SVD</span>
 <span class="n">X</span> <span class="o">-=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Centering is required</span>
@@ -229,7 +230,10 @@ dimensions along which data points exhibit the most variation.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/decomposition_2_0.png" src="../_images/decomposition_2_0.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/decomposition_2_1.png" src="../_images/decomposition_2_1.png" />
 </div>
 </div>
 <div class="section" id="principal-components-analysis-pca">
@@ -658,7 +662,7 @@ SVMs</a></p></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time Series in python</a></li>
 </ul>

@@ -35,36 +35,71 @@
             
   <div class="section" id="gh-pages">
 <h1>gh-pages<a class="headerlink" href="#gh-pages" title="Permalink to this headline">¶</a></h1>
+<p>TODO: do it with: circleci</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/">https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/jklukas/docs-on-gh-pages">https://github.com/jklukas/docs-on-gh-pages</a></p></li>
+</ul>
 <p>Publishing sphinx-generated docs on github:</p>
 <p><a class="reference external" href="https://daler.github.io/sphinxdoc-test/includeme.html">https://daler.github.io/sphinxdoc-test/includeme.html</a></p>
-<p>Build pages</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">WD</span><span class="o">=</span>~/git/pystatsml
-<span class="nb">cd</span> <span class="nv">$WD</span>
-make html
-<span class="c1">#mkdir -p ./build/html/epydoc_api</span>
-<span class="c1">#epydoc -v --html pystatsml -o ./build/html/epydoc_api</span>
-</pre></div>
 </div>
-<p>Upload to github</p>
-<p><cite>“$WD/doc/source/build/html”</cite> contains the pystatsml website. Now we start to upload to github server. Clone pystatsml from github to a temporary directory, and checkout gh-pages branch</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /tmp
-git clone git@github.com:duchesnay/pystatsml.git pystatsml_doc
-<span class="nb">cd</span> pystatsml_doc
-git branch gh-pages
-</pre></div>
-</div>
-<p>git symbolic-ref HEAD refs/heads/gh-pages  # auto-switches branches to gh-pages
-rm .git/index
-git clean -fdx
-git branch</p>
+<div class="section" id="upload-to-github">
+<h1>Upload to github<a class="headerlink" href="#upload-to-github" title="Permalink to this headline">¶</a></h1>
+<p>“$WD/build/html” contains the pystsamsl website. Now we start to upload to github server. Clone from github to a temporary directory, and checkout gh-pages branch</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">WD=~/git/pystatsml</span>
+<span class="pre">cd</span> <span class="pre">/tmp</span>
+<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:duchesnay/pystatsml.git</span> <span class="pre">pystatsml_doc</span>
+<span class="pre">cd</span> <span class="pre">pystatsml_doc</span>
+<span class="pre">git</span> <span class="pre">symbolic-ref</span> <span class="pre">HEAD</span> <span class="pre">refs/heads/gh-pages</span>
+<span class="pre">rm</span> <span class="pre">.git/index</span>
+<span class="pre">git</span> <span class="pre">clean</span> <span class="pre">-fdx</span>
+<span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">$WD/build/html/*</span> <span class="pre">./</span>
+<span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">$WD/auto_gallery</span> <span class="pre">./</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">.</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">auto_gallery</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_sources</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_static</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_images</span>
+<span class="pre">touch</span> <span class="pre">.nojekyll</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;gh-pages</span> <span class="pre">First</span> <span class="pre">commit&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">$WD/build/html/index.html</span>
+<span class="pre">`</span></code></p>
+<p>Then
+<a href="#id1"><span class="problematic" id="id2">``</span></a>`
+gedit index.html</p>
+<p>Replace:
+<a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
 <blockquote>
-<div><p>git fetch origin
-git checkout -b gh-pages origin/gh-pages</p>
+<div><p>&lt;div class=”section” id=”phantom”&gt;</p>
 </div></blockquote>
-<p>cp -r $WD/doc/source/_build/html/* ./
-git add .
-git commit -a -m “DOC: update pages”
-git push origin gh-pages</p>
+<p>&lt;h1&gt;Phantom&lt;a class=”headerlink” href=”#phantom” title=”Permalink to this headline”&gt;¶&lt;/a&gt;&lt;/h1&gt;
+&lt;/div&gt;
+<a href="#id7"><span class="problematic" id="id8">``</span></a>`
+by</p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
+&lt;div class=”section” id=”phantom”&gt;
+&lt;h1 style=”font-weight:bold;”&gt;Statistics and Machine Learning in
+Python&lt;a class=”headerlink” href=”#phantom” title=”Permalink to this headline”&gt;¶&lt;/a&gt;&lt;/h1&gt;
+&lt;/div&gt;</p>
+<p>&lt;hr&gt;</p>
+<p>&lt;p&gt;&lt;a href=”<a class="reference external" href="https://duchesnay.github.io/">https://duchesnay.github.io/</a>”&gt;Edouard Duchesnay&lt;/a&gt;, &lt;a href=”<a class="reference external" href="https://www.umu.se/en/staff/toklot02/">https://www.umu.se/en/staff/toklot02/</a>”&gt;Tommy Löfstedt&lt;/a&gt;, Feki Younes&lt;/p&gt;</p>
+<p>Links:
+&lt;ul&gt;</p>
+<blockquote>
+<div><p>&lt;li&gt;&lt;a href=”<a class="reference external" href="https://github.com/duchesnay/pystatsml">https://github.com/duchesnay/pystatsml</a>”&gt;Github&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=”<a class="reference external" href="ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf">ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf</a>”&gt;Pdf&lt;/a&gt;&lt;/li&gt;</p>
+</div></blockquote>
+<p>&lt;/ul&gt;
+<a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p>Then</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;Title</span> <span class="pre">and</span> <span class="pre">authors&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">$WD/build/html/index.html</span>
+<span class="pre">`</span></code></p>
+<p>Now, you can visit your updated website at <a class="reference external" href="https://duchesnay.github.io/pystatsml">https://duchesnay.github.io/pystatsml</a>.</p>
 </div>
 <div class="section" id="ml-resources">
 <h1>ML Resources<a class="headerlink" href="#ml-resources" title="Permalink to this headline">¶</a></h1>
@@ -137,7 +172,7 @@ git push origin gh-pages</p>
 <p><a class="reference external" href="http://sphinx-ipynb.readthedocs.org/en/latest/howto.html">http://sphinx-ipynb.readthedocs.org/en/latest/howto.html</a></p>
 <p>nbsphinx: Jupyter Notebook Tools for Sphinx</p>
 <p><a class="reference external" href="https://nbsphinx.readthedocs.io/en/0.3.3/">https://nbsphinx.readthedocs.io/en/0.3.3/</a></p>
-<p>nbsphinx is a Sphinx extension that provides a source parser for <a href="#id1"><span class="problematic" id="id2">*</span></a>.ipynb files. Custom Sphinx directives are used to show Jupyter Notebook code cells (and of course their results) in both HTML and LaTeX output. Un-evaluated notebooks – i.e. notebooks without stored output cells – will be automatically executed during the Sphinx build process.</p>
+<p>nbsphinx is a Sphinx extension that provides a source parser for <a href="#id15"><span class="problematic" id="id16">*</span></a>.ipynb files. Custom Sphinx directives are used to show Jupyter Notebook code cells (and of course their results) in both HTML and LaTeX output. Un-evaluated notebooks – i.e. notebooks without stored output cells – will be automatically executed during the Sphinx build process.</p>
 <p>conda install -c conda-forge nbsphinx</p>
 </div>
 <div class="section" id="sphinx-gallery">

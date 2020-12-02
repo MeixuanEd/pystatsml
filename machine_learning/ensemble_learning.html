@@ -81,52 +81,6 @@ technique</p></li>
 <p>To understand these techniques, first, we will explore what is
 boostrapping and its different <strong>hypothesis</strong>.</p>
 </div>
-<div class="section" id="bootstrapping">
-<h2>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this headline">¶</a></h2>
-<p>Bootstrapping is a statistical technique which consists in <strong>generating
-samples of size B</strong> (called bootstrap samples) from an initial dataset
-of size N by <strong>randomly drawing with replacement B observations</strong>.</p>
-<center><div class="figure align-default" id="id2">
-<img alt="towardsdatascience blog" src="../_images/bootstrap_overview.png" />
-<p class="caption"><span class="caption-text">towardsdatascience blog</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-</center><center><p>Illustration of the bootstrapping process.</p>
-</center><p>Under some assumptions, these samples have pretty <strong>good statistical
-properties</strong>: in first approximation, they can be seen as being drawn
-both directly from the true underlying (and often unknown) data
-distribution and independently from each others. So, they can be
-considered as <strong>representative and independent samples</strong> of the <strong>true
-data distribution</strong>. The <strong>hypothesis</strong> that have to be <strong>verified</strong> to
-make this approximation valid are <strong>twofold</strong>: - First, the size <strong>N</strong>
-of the initial dataset should be <strong>large enough</strong> to <strong>capture most of
-the complexity</strong> of the underlying distribution so that sampling from
-the dataset is a <strong>good approximation</strong> of sampling from the real
-distribution (<strong>representativity</strong>).</p>
-<ul class="simple">
-<li><p>Second, the size <strong>N</strong> of the dataset should be <strong>large enough
-compared to the size B of the bootstrap</strong> samples so that samples are
-not too much correlated (<strong>independence</strong>).</p></li>
-</ul>
-<p>Bootstrap samples are often used, for example, to <strong>evaluate variance or
-confidence intervals</strong> of a statistical estimators. By definition, a
-statistical estimator is a function of some observations and, so, a
-random variable with variance coming from these observations. In order
-to estimate the variance of such an estimator, we need to evaluate it on
-several independent samples drawn from the distribution of interest. In
-most of the cases, considering truly independent samples would require
-too much data compared to the amount really available. We can then use
-bootstrapping to generate several bootstrap samples that can be
-considered as being “almost-representative” and “almost-independent”
-(almost i.i.d. samples). These bootstrap samples will allow us to
-<strong>approximate the variance</strong> of the estimator, by evaluating its value
-for each of them.</p>
-<center><div class="figure align-default" id="id3">
-<img alt="towardsdatascience blog" src="../_images/usage_bootstrapping_in_variance.png" />
-<p class="caption"><span class="caption-text">towardsdatascience blog</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</center><center><p>Bootstrapping is often used to evaluate variance or confidence interval
-of some statistical estimators.</p>
-</center></div>
 <div class="section" id="bagging">
 <h2>Bagging<a class="headerlink" href="#bagging" title="Permalink to this headline">¶</a></h2>
 <p>In <strong>parallel methods</strong> we fit the different considered learners
@@ -156,22 +110,22 @@ are the learned base models. Then, <strong>“averaging” weak learners outputs
 do not change the expected answer but reduce its variance.</p>
 <p>So, assuming that we have L bootstrap samples (approximations of L
 independent datasets) of size B denoted</p>
-<center><div class="figure align-default" id="id4">
+<center><div class="figure align-default" id="id2">
 <img alt="Medium Science Blog" src="../_images/bagging_overview.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Each {….} is a bootstrap sample of B observation</p>
 </center><p>we can fit L almost independent weak learners (one on each dataset)</p>
-<center><div class="figure align-default" id="id5">
+<center><div class="figure align-default" id="id3">
 <img alt="Medium Science Blog" src="https://miro.medium.com/max/354/1*Dn6v09t5_L5cvADxJHJzHQ&#64;2x.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>and then aggregate them into some kind of averaging process in order to
 get an ensemble model with a lower variance. For example, we can define
 our strong model such that</p>
-<center><div class="figure align-default" id="id6">
+<center><div class="figure align-default" id="id4">
 <img alt="Medium Science Blog" src="../_images/bagging_model_aggregation.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>There are several possible ways to aggregate the multiple models fitted
 in parallel. - For a <strong>regression problem</strong>, the outputs of individual
@@ -189,9 +143,9 @@ weights can be used.</p>
 that <strong>it can be parallelised</strong>. As the different models are fitted
 independently from each others, intensive parallelisation techniques can
 be used if required.</p>
-<center><div class="figure align-default" id="id7">
+<center><div class="figure align-default" id="id5">
 <img alt="Medium Science Blog" src="../_images/bagging_architecture.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Bagging consists in fitting several base models on different bootstrap
 samples and build an ensemble model that “average” the results of these
@@ -303,9 +257,9 @@ the training dataset observations</strong> whereas <strong>gradient boosting upd
 the value of these observations</strong>. This main difference comes from the
 way both methods try to <strong>solve the optimisation</strong> problem of finding
 the best model that can be written as a weighted sum of weak learners.</p>
-<center><div class="figure align-default" id="id8">
+<center><div class="figure align-default" id="id6">
 <img alt="Medium Science Blog" src="../_images/boosting_architecture.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Boosting consists in, iteratively, fitting a weak learner, aggregate it
 to the ensemble model and “update” the training dataset to better take
@@ -315,9 +269,9 @@ when fitting the next base model.</p>
 <h3>1/ <strong>Adaptative boosting</strong><a class="headerlink" href="#adaptative-boosting" title="Permalink to this headline">¶</a></h3>
 <p>In adaptative boosting (often called “adaboost”), we try to define our
 ensemble model as a weighted sum of L weak learners</p>
-<center><div class="figure align-default" id="id9">
+<center><div class="figure align-default" id="id7">
 <img alt="Medium Science Blog" src="../_images/boost_algo_weighted_sum.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>Finding the best ensemble model with this form is a difficult
 optimisation problem. Then, <strong>instead</strong> of trying to <strong>solve it in one
@@ -328,16 +282,16 @@ to a sub-optimal solution. More especially, we <strong>add</strong> the <strong>
 learners one by one</strong>, looking at each iteration for the <strong>best possible
 pair</strong> (<strong>coefficient, weak learner</strong>) to add to the current ensemble
 model. In other words, we define recurrently the (s_l)’s such that</p>
-<center><div class="figure align-default" id="id10">
+<center><div class="figure align-default" id="id8">
 <img alt="towardsdatascience Blog" src="../_images/architecture_adaptative_boosting.png" />
-<p class="caption"><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>where c_l and w_l are chosen such that s_l is the model that fit the
 best the training data and, so, that is the <strong>best possible improvement
 over s_(l-1)</strong>. We can then denote</p>
-<center><div class="figure align-default" id="id11">
+<center><div class="figure align-default" id="id9">
 <img alt="towardsdatascience Blog" src="../_images/loss_l_step_adaptative_boosting.png" />
-<p class="caption"><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>where E(.) is the fitting error of the given model and e(.,.) is the
 loss/error function. Thus, instead of optimising “globally” over all the
@@ -375,9 +329,9 @@ weighted by coefficients expressing the performance of each learner</strong>.</p
 <p><strong>Notice</strong> that there exists variants of the initial adaboost algorithm
 such that LogitBoost (classification) or L2Boost (regression) that
 mainly differ by their choice of loss function.</p>
-<center><div class="figure align-default" id="id12">
+<center><div class="figure align-default" id="id10">
 <img alt="Medium Science Blog" src="../_images/ada_boost_steps.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Adaboost updates weights of the observations at each iteration. Weights
 of well classified observations decrease relatively to weights of
@@ -388,9 +342,9 @@ weights in the final ensemble model.</p>
 <h3>2/ <strong>Gradient boosting</strong><a class="headerlink" href="#gradient-boosting" title="Permalink to this headline">¶</a></h3>
 <p>In <strong>gradient boosting</strong>, the ensemble model we try to build is <strong>also a
 weighted sum of weak learners</strong></p>
-<center><div class="figure align-default" id="id13">
+<center><div class="figure align-default" id="id11">
 <img alt="Medium Science Blog" src="../_images/boost_algo_weighted_sum.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>Just <strong>as</strong> we mentioned for <strong>adaboost</strong>, finding the <strong>optimal model
 under this form is too difficult and an iterative approach is
@@ -402,15 +356,15 @@ the <strong>gradient of the current fitting error with respect to the current
 ensemble model</strong>. Let’s try to clarify this last point. First,
 theoretical gradient descent process over the ensemble model can be
 written</p>
-<center><div class="figure align-default" id="id14">
+<center><div class="figure align-default" id="id12">
 <img alt="Medium Science Blog" src="../_images/gradient_desceent_boosting.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>where E(.) is the fitting error of the given model, c_l is a coefficient
 corresponding to the step size and</p>
-<center><div class="figure align-default" id="id15">
+<center><div class="figure align-default" id="id13">
 <img alt="Medium Science Blog" src="../_images/step_size_gradient_boosting.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
 </div>
 </center><p>This entity is the <strong>opposite of the gradient of the fitting error with
 respect to the ensemble model at step l-1</strong>. This opposite of the
@@ -457,9 +411,9 @@ science. <strong>LIGHTGBM is a recent implementation</strong> of this algorithm.
 was published by <strong>Microsoft</strong> and it gives us the same scores (if
 parameters are equivalents) but it runs <strong>quicker</strong> than a classic
 <strong>XGBOOST</strong>.</p>
-<center><div class="figure align-default" id="id16">
+<center><div class="figure align-default" id="id14">
 <img alt="Medium Science Blog" src="../_images/gradient_boosting_steps.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Gradient boosting updates values of the observations at each iteration.
 Weak learners are trained to fit the pseudo-residuals that indicate in
@@ -595,17 +549,17 @@ made by the weak learners as inputs</strong></p></li>
 <p>In the previous steps, we split the dataset in two folds because
 predictions on data that have been used for the training of the weak
 learners are <strong>not relevant for the training of the meta-model</strong>.</p>
-<center><div class="figure align-default" id="id17">
+<center><div class="figure align-default" id="id15">
 <img alt="Medium Science Blog" src="../_images/stacking_architecture.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Stacking consists in training a meta-model to produce outputs based on
 the outputs returned by some lower layer weak learners.</p>
 </center><p>A possible extension of stacking is multi-level stacking. It consists in
 doing <strong>stacking with multiple layers</strong>. As an example,</p>
-<center><div class="figure align-default" id="id18">
+<center><div class="figure align-default" id="id16">
 <img alt="Medium Science Blog" src="../_images/multi_stacking_architecture.png" />
-<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
 </div>
 </center><center><p>Multi-level stacking considers several layers of stacking: some
 meta-models are trained on outputs returned by lower layer meta-models
@@ -793,7 +747,7 @@ and so on. Here we have represented a 3-layers stacking model.</p>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time Series in python</a></li>
 </ul>
@@ -807,7 +761,6 @@ and so on. Here we have represented a 3-layers stacking model.</p>
 <li class="toctree-l1"><a class="reference internal" href="resampling.html">Resampling Methods</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Ensemble learning: bagging, boosting and stacking</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#single-weak-learner">Single weak learner</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bootstrapping">Bootstrapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bagging">Bagging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#boosting">Boosting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#overview-of-stacking">Overview of stacking</a></li>

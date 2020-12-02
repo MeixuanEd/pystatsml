@@ -78,6 +78,10 @@ and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.</p>
 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;demo.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;gm.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;wm.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;csf.csv&quot;</span><span class="p">]:</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">base_url</span> <span class="o">%</span> <span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
 
+<span class="c1"># Read all CSV in one line</span>
+<span class="c1"># dicts = {k: pd.read_csv(os.path.join(WD, &quot;data&quot;, &quot;%s.csv&quot; % k))</span>
+<span class="c1">#          for k in [&quot;demo&quot;, &quot;gm&quot;, &quot;wm&quot;, &quot;csf&quot;]}</span>
+
 <span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;demo.csv&quot;</span><span class="p">))</span>
 <span class="n">gm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;gm.csv&quot;</span><span class="p">))</span>
 <span class="n">wm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;wm.csv&quot;</span><span class="p">))</span>
@@ -261,6 +265,7 @@ This property is known as homoscedasticity.</p></li>
 </ul>
 <p>Plot</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;site&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;gm_f&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span>
+<span class="c1"># sns.violinplot(x=&quot;site&quot;, y=&quot;wm_f&quot;, data=brain_vol1)</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_stat_univ_lab_brain-volume_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_stat_univ_lab_brain-volume_001.png" />
@@ -355,8 +360,8 @@ Decrease seems faster in patient than in control population
 Dep. Variable:                   gm_f   R-squared:                       0.106
 Model:                            OLS   Adj. R-squared:                  0.095
 Method:                 Least Squares   F-statistic:                     9.929
-Date:              jeu., 26 nov. 2020   Prob (F-statistic):            0.00226
-Time:                        23:26:30   Log-Likelihood:                 159.34
+Date:              mer., 02 déc. 2020   Prob (F-statistic):            0.00226
+Time:                        02:46:55   Log-Likelihood:                 159.34
 No. Observations:                  86   AIC:                            -314.7
 Df Residuals:                      84   BIC:                            -309.8
 Df Model:                           1
@@ -382,8 +387,8 @@ Age explains 10.57% of the grey matter fraction variance
 Dep. Variable:                   gm_f   R-squared:                       0.280
 Model:                            OLS   Adj. R-squared:                  0.275
 Method:                 Least Squares   F-statistic:                     60.16
-Date:              jeu., 26 nov. 2020   Prob (F-statistic):           1.09e-12
-Time:                        23:26:30   Log-Likelihood:                 289.38
+Date:              mer., 02 déc. 2020   Prob (F-statistic):           1.09e-12
+Time:                        02:46:55   Log-Likelihood:                 289.38
 No. Observations:                 157   AIC:                            -574.8
 Df Residuals:                     155   BIC:                            -568.7
 Df Model:                           1
@@ -436,8 +441,8 @@ younger than Controls)</p>
 Dep. Variable:                    age   R-squared:                       0.006
 Model:                            OLS   Adj. R-squared:                  0.002
 Method:                 Least Squares   F-statistic:                     1.478
-Date:              jeu., 26 nov. 2020   Prob (F-statistic):              0.225
-Time:                        23:26:30   Log-Likelihood:                -949.69
+Date:              mer., 02 déc. 2020   Prob (F-statistic):              0.225
+Time:                        02:46:55   Log-Likelihood:                -949.69
 No. Observations:                 243   AIC:                             1903.
 Df Residuals:                     241   BIC:                             1910.
 Df Model:                           1
@@ -509,6 +514,7 @@ Residual    0.25 235.00   nan     nan
 No significant difference in GM between patients and controls
 </pre></div>
 </div>
+<p>Observe age effect</p>
 <p><strong>4. Test for interaction between age and clinical status</strong>, ie: is the brain
 atrophy process in patient population faster than in the control population.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ancova</span> <span class="o">=</span> <span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ group:age + age + site&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -544,7 +550,7 @@ dtype: float64
 grey matter loss in patients is accelerated by -0.232% per decade
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.680 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  8.626 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-stat-univ-lab-brain-volume-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/324d6552e8a5bd8c9e22bb46437a1390/stat_univ_lab_brain-volume.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">stat_univ_lab_brain-volume.py</span></code></a></p>

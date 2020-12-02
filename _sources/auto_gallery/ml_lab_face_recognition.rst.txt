@@ -45,6 +45,8 @@ Pipelines:
     import numpy as np
     from time import time
     import matplotlib.pyplot as plt
+    import pandas as pd
+    import seaborn as sns
 
     from sklearn.model_selection import train_test_split
     from sklearn.model_selection import GridSearchCV
@@ -54,21 +56,20 @@ Pipelines:
     # Preprocesing
     from sklearn import preprocessing
     from sklearn.pipeline import make_pipeline
+    from sklearn.pipeline import Pipeline
+    from sklearn.feature_selection import SelectKBest, f_classif
 
+    # Dataset
     from sklearn.datasets import fetch_lfw_people
 
     # Models
     from sklearn.decomposition import PCA
+    import sklearn.manifold as manifold
     import sklearn.linear_model as lm
     import sklearn.svm as svm
     from sklearn.neural_network import MLPClassifier
     # from sklearn.ensemble import RandomForestClassifier
     # from sklearn.ensemble import GradientBoostingClassifier
-
-    # For pipelines
-    from sklearn.pipeline import Pipeline
-    from sklearn.feature_selection import SelectKBest
-    from sklearn.feature_selection import f_classif
 
     # Pytorch Models
     import torch
@@ -255,9 +256,7 @@ dataset): unsupervised feature extraction / dimensionality reduction
 
     eigenfaces = pca.components_.reshape((n_components, h, w))
 
-    print("Projecting the input data on the eigenfaces orthonormal basis")
-    X_train_pca = pca.transform(X_train)
-    X_test_pca = pca.transform(X_test)
+    print("Explained variance", pca.explained_variance_ratio_[:2])
 
 
 
@@ -270,9 +269,73 @@ dataset): unsupervised feature extraction / dimensionality reduction
  .. code-block:: none
 
     Extracting the top 150 eigenfaces from 966 faces
-    done in 0.103s
+    done in 0.231s
+    Explained variance [0.18892334 0.1529339 ]
+
+
+
+
+T-SNE
+
+
+.. code-block:: default
+
+
+    tsne = manifold.TSNE(n_components=2, init='pca', random_state=0)
+    X_tsne = tsne.fit_transform(X_train)
+
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+
+    print("Projecting the input data on the eigenfaces orthonormal basis")
+    X_train_pca = pca.transform(X_train)
+    X_test_pca = pca.transform(X_test)
+    df = pd.DataFrame(dict(lab=y_train,
+                           PC1=X_train_pca[:, 0],
+                           PC2=X_train_pca[:, 1],
+                           TSNE1=X_tsne[:, 0],
+                           TSNE2=X_tsne[:, 1]))
+
+    sns.relplot(x="PC1", y="PC2", hue="lab", data=df)
+
+    sns.relplot(x="TSNE1", y="TSNE2", hue="lab", data=df)
+
+
+
+
+
+.. rst-class:: sphx-glr-horizontal
+
+
+    *
+
+      .. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_002.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_003.png
+            :class: sphx-glr-multi-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
     Projecting the input data on the eigenfaces orthonormal basis
 
+    <seaborn.axisgrid.FacetGrid object at 0x7fa31dbed750>
 
 
 
@@ -289,7 +352,7 @@ Plot eigenfaces:
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_002.png
+.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_004.png
     :class: sphx-glr-single-img
 
 
@@ -343,7 +406,7 @@ are:
 
  .. code-block:: none
 
-    done in 7.246s
+    done in 18.456s
     Best params found by grid search:
     {'C': 1.0}
                        precision    recall  f1-score   support
@@ -385,7 +448,7 @@ Coeficients
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_003.png
+.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_005.png
     :class: sphx-glr-single-img
 
 
@@ -431,7 +494,7 @@ Remarks:
 
  .. code-block:: none
 
-    done in 26.589s
+    done in 96.676s
     Best params found by grid search:
     {'C': 0.1, 'kernel': 'poly'}
                        precision    recall  f1-score   support
@@ -506,7 +569,7 @@ Default parameters:
 
  .. code-block:: none
 
-    done in 132.523s
+    done in 319.074s
     Best params found by grid search:
     {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (100,), 'solver': 'adam'}
                        precision    recall  f1-score   support
@@ -590,20 +653,20 @@ MLP with pytorch and no model selection
 
  .. code-block:: none
 
-    done in 1.927s
+    done in 5.770s
                        precision    recall  f1-score   support
 
-         Ariel Sharon       0.78      0.74      0.76        19
-         Colin Powell       0.77      0.86      0.82        59
-      Donald Rumsfeld       0.68      0.70      0.69        30
-        George W Bush       0.89      0.88      0.88       133
-    Gerhard Schroeder       0.57      0.63      0.60        27
-          Hugo Chavez       1.00      0.33      0.50        18
-           Tony Blair       0.74      0.81      0.77        36
+         Ariel Sharon       0.82      0.74      0.78        19
+         Colin Powell       0.94      0.78      0.85        59
+      Donald Rumsfeld       0.61      0.63      0.62        30
+        George W Bush       0.79      0.93      0.86       133
+    Gerhard Schroeder       0.63      0.63      0.63        27
+          Hugo Chavez       0.89      0.44      0.59        18
+           Tony Blair       0.79      0.72      0.75        36
 
              accuracy                           0.79       322
-            macro avg       0.77      0.71      0.72       322
-         weighted avg       0.80      0.79      0.79       322
+            macro avg       0.78      0.70      0.73       322
+         weighted avg       0.80      0.79      0.78       322
 
 
 
@@ -649,7 +712,7 @@ Univariate feature filtering (Anova) with Logistic-L2
 
  .. code-block:: none
 
-    done in 18.521s
+    done in 50.681s
     Best params found by grid search:
     {'anova__k': 1850, 'l2lr__C': 100.0}
                        precision    recall  f1-score   support
@@ -706,30 +769,30 @@ PCA with LogisticRegression with L2 regularization
 
  .. code-block:: none
 
-    done in 0.320s
+    done in 1.015s
     Best params found by grid search:
-    {'C': 0.1}
+    {'C': 1.0}
                        precision    recall  f1-score   support
 
-         Ariel Sharon       0.57      0.89      0.69        19
-         Colin Powell       0.85      0.75      0.79        59
-      Donald Rumsfeld       0.60      0.80      0.69        30
-        George W Bush       0.95      0.69      0.80       133
-    Gerhard Schroeder       0.59      0.81      0.69        27
-          Hugo Chavez       0.46      0.67      0.55        18
-           Tony Blair       0.70      0.78      0.74        36
+         Ariel Sharon       0.56      0.95      0.71        19
+         Colin Powell       0.82      0.76      0.79        59
+      Donald Rumsfeld       0.68      0.77      0.72        30
+        George W Bush       0.89      0.73      0.80       133
+    Gerhard Schroeder       0.62      0.78      0.69        27
+          Hugo Chavez       0.42      0.44      0.43        18
+           Tony Blair       0.74      0.81      0.77        36
 
-             accuracy                           0.74       322
-            macro avg       0.67      0.77      0.71       322
-         weighted avg       0.79      0.74      0.75       322
+             accuracy                           0.75       322
+            macro avg       0.68      0.75      0.70       322
+         weighted avg       0.77      0.75      0.75       322
 
-    [[17  0  1  0  0  1  0]
-     [ 5 44  3  3  0  2  2]
-     [ 1  2 24  0  0  2  1]
-     [ 6  5 10 92  7  9  4]
-     [ 0  0  0  0 22  0  5]
-     [ 0  1  1  1  3 12  0]
-     [ 1  0  1  1  5  0 28]]
+    [[18  0  0  0  0  1  0]
+     [ 4 45  3  5  0  0  2]
+     [ 1  1 23  1  1  2  1]
+     [ 9  5  6 97  6  7  3]
+     [ 0  0  0  1 21  1  4]
+     [ 0  3  1  3  3  8  0]
+     [ 0  1  1  2  3  0 29]]
 
 
 
@@ -812,20 +875,20 @@ Sources:
 
  .. code-block:: none
 
-    done in 97.154s
+    done in 42.139s
                        precision    recall  f1-score   support
 
-         Ariel Sharon       0.70      0.84      0.76        19
-         Colin Powell       0.92      0.92      0.92        59
-      Donald Rumsfeld       0.85      0.73      0.79        30
-        George W Bush       0.86      0.96      0.91       133
-    Gerhard Schroeder       0.88      0.78      0.82        27
-          Hugo Chavez       0.90      0.50      0.64        18
-           Tony Blair       0.90      0.78      0.84        36
+         Ariel Sharon       0.80      0.84      0.82        19
+         Colin Powell       0.96      0.92      0.94        59
+      Donald Rumsfeld       0.79      0.77      0.78        30
+        George W Bush       0.88      0.95      0.91       133
+    Gerhard Schroeder       0.71      0.89      0.79        27
+          Hugo Chavez       0.80      0.44      0.57        18
+           Tony Blair       0.93      0.78      0.85        36
 
-             accuracy                           0.86       322
-            macro avg       0.86      0.79      0.81       322
-         weighted avg       0.87      0.86      0.86       322
+             accuracy                           0.87       322
+            macro avg       0.84      0.80      0.81       322
+         weighted avg       0.87      0.87      0.86       322
 
 
 
@@ -906,7 +969,7 @@ ConvNet with Resnet18
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_004.png
+.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_006.png
     :class: sphx-glr-single-img
 
 
@@ -916,22 +979,22 @@ ConvNet with Resnet18
 
  .. code-block:: none
 
-    done in 462.056s
+    done in 120.836s
                        precision    recall  f1-score   support
 
-         Ariel Sharon       0.90      0.95      0.92        19
-         Colin Powell       0.98      0.93      0.96        59
-      Donald Rumsfeld       0.73      0.80      0.76        30
-        George W Bush       0.88      0.98      0.93       133
-    Gerhard Schroeder       0.77      0.63      0.69        27
-          Hugo Chavez       0.90      0.50      0.64        18
-           Tony Blair       0.88      0.83      0.86        36
+         Ariel Sharon       0.85      0.89      0.87        19
+         Colin Powell       0.96      0.92      0.94        59
+      Donald Rumsfeld       0.72      0.77      0.74        30
+        George W Bush       0.88      0.95      0.91       133
+    Gerhard Schroeder       0.71      0.56      0.63        27
+          Hugo Chavez       1.00      0.56      0.71        18
+           Tony Blair       0.76      0.81      0.78        36
 
-             accuracy                           0.88       322
-            macro avg       0.86      0.80      0.82       322
-         weighted avg       0.88      0.88      0.87       322
+             accuracy                           0.85       322
+            macro avg       0.84      0.78      0.80       322
+         weighted avg       0.86      0.85      0.85       322
 
-    /home/ed203246/git/pystatsml/labs/ml_lab_face_recognition.py:528: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+    /home/ed203246/git/pystatsml/labs/ml_lab_face_recognition.py:551: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
       plt.show()
 
 
@@ -940,7 +1003,7 @@ ConvNet with Resnet18
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 12 minutes  29.858 seconds)
+   **Total running time of the script:** ( 11 minutes  24.429 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_ml_lab_face_recognition.py:

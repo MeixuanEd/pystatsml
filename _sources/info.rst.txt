@@ -1,44 +1,84 @@
 gh-pages
 --------
+
+TODO: do it with: circleci
+
+- https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/
+- https://github.com/jklukas/docs-on-gh-pages
+
+
 Publishing sphinx-generated docs on github:
 
 https://daler.github.io/sphinxdoc-test/includeme.html
 
 
-Build pages
-
-.. code-block:: bash
-
-   WD=~/git/pystatsml
-   cd $WD
-   make html
-   #mkdir -p ./build/html/epydoc_api
-   #epydoc -v --html pystatsml -o ./build/html/epydoc_api
 
 Upload to github
+----------------
 
-`"$WD/doc/source/build/html"` contains the pystatsml website. Now we start to upload to github server. Clone pystatsml from github to a temporary directory, and checkout gh-pages branch
 
-.. code-block:: bash
+"$WD/build/html" contains the pystsamsl website. Now we start to upload to github server. Clone from github to a temporary directory, and checkout gh-pages branch
 
-   cd /tmp
-   git clone git@github.com:duchesnay/pystatsml.git pystatsml_doc
-   cd pystatsml_doc
-   git branch gh-pages
-
-git symbolic-ref HEAD refs/heads/gh-pages  # auto-switches branches to gh-pages
+```
+WD=~/git/pystatsml
+cd /tmp
+git clone git@github.com:duchesnay/pystatsml.git pystatsml_doc
+cd pystatsml_doc
+git symbolic-ref HEAD refs/heads/gh-pages
 rm .git/index
 git clean -fdx
-git branch
-
-
-   git fetch origin
-   git checkout -b gh-pages origin/gh-pages
-
-cp -r $WD/doc/source/_build/html/* ./
+cp -r $WD/build/html/* ./
+cp -r $WD/auto_gallery ./
 git add .
-git commit -a -m "DOC: update pages"
+git add -f auto_gallery
+git add -f _sources
+git add -f _static
+git add -f _images
+touch .nojekyll
+git commit -am "gh-pages First commit"
 git push origin gh-pages
+firefox  $WD/build/html/index.html
+```
+
+Then
+```
+gedit index.html
+
+Replace:
+```
+  <div class="section" id="phantom">
+<h1>Phantom<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
+</div>
+```
+by
+
+```
+<div class="section" id="phantom">
+<h1 style="font-weight:bold;">Statistics and Machine Learning in
+Python<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
+</div>
+
+<hr>
+
+<p><a href="https://duchesnay.github.io/">Edouard Duchesnay</a>, <a href="https://www.umu.se/en/staff/toklot02/">Tommy Löfstedt</a>, Feki Younes</p>
+
+Links:
+<ul>
+  <li><a href="https://github.com/duchesnay/pystatsml">Github</a></li>
+  <li><a href="ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf">Pdf</a></li>
+</ul>
+```
+
+Then
+
+```
+git commit -am "Title and authors"
+git push origin gh-pages
+firefox  $WD/build/html/index.html
+```
+
+Now, you can visit your updated website at https://duchesnay.github.io/pystatsml.
+
 
 ML Resources
 ------------

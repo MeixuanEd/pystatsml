@@ -65,6 +65,10 @@ Create 2 subdirectories: `data` that will contain downloaded data and
     for file in ["demo.csv", "gm.csv", "wm.csv", "csf.csv"]:
         urllib.request.urlretrieve(base_url % file, os.path.join(WD, "data", file))
 
+    # Read all CSV in one line
+    # dicts = {k: pd.read_csv(os.path.join(WD, "data", "%s.csv" % k))
+    #          for k in ["demo", "gm", "wm", "csf"]}
+
     demo = pd.read_csv(os.path.join(WD, "data", "demo.csv"))
     gm = pd.read_csv(os.path.join(WD, "data", "gm.csv"))
     wm = pd.read_csv(os.path.join(WD, "data", "wm.csv"))
@@ -416,6 +420,7 @@ Plot
 .. code-block:: default
 
     sns.violinplot(x="site", y="gm_f", data=brain_vol1)
+    # sns.violinplot(x="site", y="wm_f", data=brain_vol1)
 
 
 
@@ -594,8 +599,8 @@ Stats with statsmodels
     Dep. Variable:                   gm_f   R-squared:                       0.106
     Model:                            OLS   Adj. R-squared:                  0.095
     Method:                 Least Squares   F-statistic:                     9.929
-    Date:              jeu., 26 nov. 2020   Prob (F-statistic):            0.00226
-    Time:                        23:26:30   Log-Likelihood:                 159.34
+    Date:              mer., 02 déc. 2020   Prob (F-statistic):            0.00226
+    Time:                        02:46:55   Log-Likelihood:                 159.34
     No. Observations:                  86   AIC:                            -314.7
     Df Residuals:                      84   BIC:                            -309.8
     Df Model:                           1                                         
@@ -621,8 +626,8 @@ Stats with statsmodels
     Dep. Variable:                   gm_f   R-squared:                       0.280
     Model:                            OLS   Adj. R-squared:                  0.275
     Method:                 Least Squares   F-statistic:                     60.16
-    Date:              jeu., 26 nov. 2020   Prob (F-statistic):           1.09e-12
-    Time:                        23:26:30   Log-Likelihood:                 289.38
+    Date:              mer., 02 déc. 2020   Prob (F-statistic):           1.09e-12
+    Time:                        02:46:55   Log-Likelihood:                 289.38
     No. Observations:                 157   AIC:                            -574.8
     Df Residuals:                     155   BIC:                            -568.7
     Df Model:                           1                                         
@@ -723,8 +728,8 @@ Stats with statsmodels
     Dep. Variable:                    age   R-squared:                       0.006
     Model:                            OLS   Adj. R-squared:                  0.002
     Method:                 Least Squares   F-statistic:                     1.478
-    Date:              jeu., 26 nov. 2020   Prob (F-statistic):              0.225
-    Time:                        23:26:30   Log-Likelihood:                -949.69
+    Date:              mer., 02 déc. 2020   Prob (F-statistic):              0.225
+    Time:                        02:46:55   Log-Likelihood:                -949.69
     No. Observations:                 243   AIC:                             1903.
     Df Residuals:                     241   BIC:                             1910.
     Df Model:                           1                                         
@@ -843,6 +848,8 @@ This model is simplistic we should adjust for age and site
 
 
 
+Observe age effect
+
 **4. Test for interaction between age and clinical status**, ie: is the brain
 atrophy process in patient population faster than in the control population.
 
@@ -895,7 +902,7 @@ atrophy process in patient population faster than in the control population.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.680 seconds)
+   **Total running time of the script:** ( 0 minutes  8.626 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_stat_univ_lab_brain-volume.py:

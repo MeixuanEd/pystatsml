@@ -15,10 +15,10 @@ Train, Validation and Test Sets
 Machine learning algorithms overfit taining data. Predictive
 performances **MUST** be evaluated on independant hold-out dataset.
 
-.. figure:: images/train_validation_test_sets.png
-   :alt: Train, Validation and Test Sets.
+.. figure:: images/train_val_test_cv.png
+   :alt: Train, validation and test sets.
 
-   Train, Validation and Test Sets.
+   Train, validation and test sets.
 
 1. **Training dataset**: Dataset used to fit the model (set the model
    parameters like weights). The *training error* can be easily
@@ -29,14 +29,14 @@ performances **MUST** be evaluated on independant hold-out dataset.
 
 2. **Validation dataset**: Dataset used to provide an unbiased
    evaluation of a model fit on the training dataset while **tuning
-   model hyperparameters**. The validation error is the average error
-   that results from a learning method to predict the response on a new
-   (validation) samples that is, on samples that were not used in
-   training the method.
+   model hyperparameters**, ie. **Model selection**. The validation
+   error is the average error that results from a learning method to
+   predict the response on a new (validation) samples that is, on
+   samples that were not used in training the method.
 
-3. **Test Dataset**: Dataset used to provide an unbiased evaluation of a
-   final model fit on the training dataset. It is only used once a model
-   is completely trained(using the train and validation sets).
+3. **Test dataset**: Dataset used to provide an unbiased **evaluation of
+   a final model** fitted on the training dataset. It is only used once
+   a model is completely trained(using the train and validation sets).
 
 What is the Difference Between Test and Validation Datasets? by `Jason
 Brownlee <https://machinelearningmastery.com/difference-test-validation-datasets/>`__
@@ -46,9 +46,141 @@ and a test data sets. Large training+validation set (80%) small test set
 (20%) might provide a poor estimation of the predictive performances
 (same argument stands for train vs validation samples). On the contrary,
 large test set and small training set might produce a poorly estimated
-learner. This is why, on situation where we cannot afford such split, it
-recommended to use cross-validation scheme to estimate the predictive
-power of a learning algorithm.
+learner. This is why, on situation where we cannot afford such split,
+cross-validation scheme can be use for model selection or/and for model
+evaluation.
+
+If sample size is limited, train/validation/test split may not be
+possible. **Cross Validation (CV)** (see below) can be used to replace:
+
+-  Outer (train/test) split of model evaluation.
+-  Inner train/validation split of model selection (more frequent
+   situation).
+-  Inner and outer splits, leading to two nested CV.
+
+.. code:: ipython3
+
+    import numpy as np
+    from sklearn import datasets
+    import sklearn.linear_model as lm
+    from sklearn.model_selection import train_test_split, KFold, PredefinedSplit
+    from sklearn.model_selection import cross_val_score, GridSearchCV
+    
+    import sklearn.metrics as metrics
+    X, y = datasets.make_regression(n_samples=100, n_features=100, 
+                             n_informative=10, random_state=42)
+
+1. Split dataset in train/test sets for model (outer) evaluation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+1.1 Predefined train/validation split for model (inner) selection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Re-split train set into train/validation and build a CV object (inner
+split) out of it:
+
+.. code:: ipython3
+
+    train_idx, validation_idx = train_test_split(np.arange(X_train.shape[0]),
+                                                 test_size=0.25, random_state=42)
+    split_inner = PredefinedSplit(test_fold=validation_idx)
+    print("Train set size: %i" % X_train[train_idx].shape[0])
+    print("Validation set size: %i" % X_train[validation_idx].shape[0])
+    print("Test set size: %i" % X_test.shape[0])
+    
+    lm_cv = GridSearchCV(lm.Ridge(), {'alpha': 10. ** np.arange(-3, 3)},
+                         cv=split_inner, n_jobs=5)
+    
+    # Fit, indluding model selection with internal Train/validation split
+    lm_cv.fit(X_train, y_train)
+    
+    # Predict
+    y_pred_test = lm_cv.predict(X_test)
+    print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
+
+
+.. parsed-literal::
+
+    Train set size: 56
+    Validation set size: 19
+    Test set size: 25
+    Test R2: 0.80
+
+
+1.2 Cross-validation for model (inner) selection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    cv_inner = KFold(n_splits=5, shuffle=True, random_state=42)
+    
+    print("Train/Validation set sizes: ",
+          [[len(tr), len(ev)] for tr, ev in cv_inner.split(X_train)])
+    print("Test set size: %i" % X_test.shape[0])
+    
+    # Cross-validation for model selection
+    lm_cv = GridSearchCV(lm.Ridge(), {'alpha': 10. ** np.arange(-3, 3)},
+                         cv=cv_inner, n_jobs=5)
+    
+    # Fit, indluding model selection with internal CV
+    lm_cv.fit(X_train, y_train)
+    
+    # Predict
+    y_pred_test = lm_cv.predict(X_test)
+    print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
+
+
+.. parsed-literal::
+
+    Train/Validation set sizes:  [[60, 15], [60, 15], [60, 15], [60, 15], [60, 15]]
+    Test set size: 25
+    Test R2: 0.80
+
+
+2. Cross-validation for both model (outer) evaluation and model (inner) selection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    cv_outer = KFold(n_splits=5, shuffle=True, random_state=42)
+    
+    sizes = pd.DataFrame([[len(train), len(eva), len(test)]
+           for tr_outer, test in cv_outer.split(X)
+           for train, eva in cv_inner.split(X[tr_outer])
+          ], columns=["train", 'validation', 'test'])
+    
+    print("Train/Validation set sizes: ")
+    print(sizes.iloc[np.r_[0:4, -4:0]])
+    print("Nb runs: %i (nb outer folds x nb inner folds)" % sizes.shape[0])
+    
+    # Cross-validation for model (inner) selection
+    lm_cv = GridSearchCV(lm.Ridge(), {'alpha': 10. ** np.arange(-3, 3)}, cv=cv_inner, n_jobs=5)
+    
+    # Cross-validation for model (outer) evaluation
+    scores = cross_val_score(estimator=lm_cv, X=X, y=y, cv=cv_outer)
+    
+    print("CV R2:%.2f" % scores.mean())
+
+
+.. parsed-literal::
+
+    Train/Validation set sizes: 
+        train  validation  test
+    0      64          16    20
+    1      64          16    20
+    2      64          16    20
+    3      64          16    20
+    21     64          16    20
+    22     64          16    20
+    23     64          16    20
+    24     64          16    20
+    Nb runs: 25 (nb outer folds x nb inner folds)
+    CV R2:0.58
+
 
 Cross-Validation (CV)
 ---------------------
@@ -116,20 +248,10 @@ However other function could be used.
 
 .. code:: ipython3
 
-    %matplotlib inline
-    import warnings
-    warnings.filterwarnings(action='once')
-
-.. code:: ipython3
-
     import numpy as np
-    from sklearn import datasets
-    import sklearn.linear_model as lm
     import sklearn.metrics as metrics
     from sklearn.model_selection import KFold
     
-    X, y = datasets.make_regression(n_samples=100, n_features=100, 
-                             n_informative=10, random_state=42)
     estimator = lm.Ridge(alpha=10)
     
     cv = KFold(n_splits=5, random_state=42)
@@ -354,7 +476,7 @@ Parallel computation with joblib
 
 .. code:: ipython3
 
-    from sklearn.externals.joblib import Parallel, delayed
+    from joblib import Parallel, delayed
     from sklearn.base import is_classifier, clone
     
     def _split_fit_predict(estimator, X, y, train, test):
@@ -636,11 +758,11 @@ Classification models with built-in cross-validation
 .. parsed-literal::
 
     == Logistic Ridge (L2 penalty) ==
-    Test  ACC:0.77
+    Test  ACC:0.76
 
 
-Random Permutations
--------------------
+Random Permutations: sample the null distribution
+-------------------------------------------------
 
 A permutation test is a type of non-parametric randomization test in
 which the null distribution of a test statistic is estimated by randomly
@@ -661,60 +783,92 @@ distributed under the null hypothesis.
    :math:`P(t>t_{obs} | H_0) \left\vert\{t_i > t_{obs}\}\right\vert`,
    where :math:`t_i`\ ’s include :math:`t_{obs}`.
 
-Example with a correlation
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example Ridge regression
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-The statistic is the correlation.
+Sample the distributions of r-squared and coefficients of ridge
+regression under the null hypothesis. Simulated dataset:
 
 .. code:: ipython3
 
     import numpy as np
-    import scipy.stats as stats
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    %matplotlib inline
-    #%matplotlib qt
+    import sklearn.linear_model as lm
+    import sklearn.metrics as metrics
+    import pandas as pd
     
-    np.random.seed(42)
-    x = np.random.normal(loc=10, scale=1, size=100)
-    y = x + np.random.normal(loc=-3, scale=3, size=100) # snr = 1/2
+    # Regression dataset
+    np.random.seed(0)
+    n_features = 5
+    n_features_info = 2
+    n_samples = 100
+    X = np.random.randn(n_samples, n_features)
+    beta = np.zeros(n_features)
+    beta[:n_features_info] = 1
+    Xbeta = np.dot(X, beta)
+    eps = np.random.randn(n_samples)
+    y = Xbeta + eps
+
+Random permutations
+
+.. code:: ipython3
+
+    # Fit model on all data (!! risk of overfit)
+    model = lm.RidgeCV()
+    model.fit(X, y)
+    print("Coefficients on all data:")
+    print(model.coef_)
     
-    # Permutation: simulate the null hypothesis
-    nperm = 10000
-    perms = np.zeros(nperm + 1)
+    # Random permutation loop
+    nperm = 1000  # !! Should be at least 1000 (to assess a p-value at 1%)
+    scores_names = ["r2"]
+    scores_perm = np.zeros((nperm + 1, len(scores_names)))
+    coefs_perm = np.zeros((nperm + 1, X.shape[1]))
     
-    perms[0] = np.corrcoef(x, y)[0, 1]
+    scores_perm[0, :] = metrics.r2_score(y, model.predict(X))
+    coefs_perm[0, :] = model.coef_
     
-    for i in range(1, nperm):
-        perms[i] = np.corrcoef(np.random.permutation(x), y)[0, 1]
+    orig_all = np.arange(X.shape[0])
+    for perm_i in range(1, nperm + 1):
+        model.fit(X, np.random.permutation(y))
+        y_pred = model.predict(X).ravel()
+        scores_perm[perm_i, :] = metrics.r2_score(y, y_pred)
+        coefs_perm[perm_i, :] = model.coef_
     
-    # Plot
-    # Re-weight to obtain distribution
+    
+    # One-tailed empirical p-value
+    pval_pred_perm = np.sum(scores_perm >= scores_perm[0]) / scores_perm.shape[0]
+    pval_coef_perm = np.sum(coefs_perm >= coefs_perm[0, :], axis=0) / coefs_perm.shape[0]
+    
+    print("R2 p-value: %.3f" % pval_pred_perm)
+    print("Coeficients p-values:", np.round(pval_coef_perm, 3))
+
+
+.. parsed-literal::
+
+    Coefficients on all data:
+    [ 1.01872179  1.05713711  0.20873888 -0.01784094 -0.05265821]
+    R2 p-value: 0.001
+    Coeficients p-values: [0.001 0.001 0.098 0.573 0.627]
+
+
+.. code:: ipython3
+
+    # Plot distribution of third coefficient under null-hypothesis
+    perms = coefs_perm[:, 2]
+    
+    # Re-weight to obtain distribution
     weights = np.ones(perms.shape[0]) / perms.shape[0]
     plt.hist([perms[perms >= perms[0]], perms], histtype='stepfilled', 
-             bins=100, label=["t>t obs (p-value)", "t<t obs"], 
+             bins=100, label=["beta>beta obs (p-value)", "beta<beta obs"], 
              weights=[weights[perms >= perms[0]], weights])
     
     plt.xlabel("Statistic distribution under null hypothesis")
     plt.axvline(x=perms[0], color='blue', linewidth=1, label="observed statistic")
     _ = plt.legend(loc="upper left")
-    
-    # One-tailed empirical p-value
-    pval_perm = np.sum(perms >= perms[0]) / perms.shape[0]
-    
-    # Compare with Pearson's correlation test
-    _, pval_test = stats.pearsonr(x, y)
-    
-    print("Permutation two tailed p-value=%.5f. Pearson test p-value=%.5f" % (2*pval_perm, pval_test))
-
-
-.. parsed-literal::
-
-    Permutation two tailed p-value=0.06959. Pearson test p-value=0.07355
 
 
 
-.. image:: resampling_files/resampling_36_1.png
+.. image:: resampling_files/resampling_48_0.png
 
 
 Exercise
@@ -723,8 +877,8 @@ Exercise
 Given the logistic regression presented above and its validation given a
 5 folds CV.
 
-1. Compute the p-value associated with the prediction accuracy using a
-   permutation test.
+1. Compute the p-value associated with the prediction accuracy measured
+   with 5CV using a permutation test.
 
 2. Compute the p-value associated with the prediction accuracy using a
    parametric test.
@@ -732,10 +886,17 @@ Given the logistic regression presented above and its validation given a
 Bootstrapping
 -------------
 
-Bootstrapping is a random sampling with replacement strategy which
-provides an non-parametric method to assess the variability of
-performances scores such standard errors or `confidence
-intervals. <https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals>`__
+Bootstrapping is a statistical technique which consists in generating
+sample (called bootstrap samples) from an initial dataset of size
+:math:`N` by randomly drawing with replacement :math:`N` observations.
+It provides sub-samples with the same distribution than the original
+dataset. It aims to:
+
+1. Assess the variability (standard error, `confidence
+   intervals. <https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals>`__)
+   of performances scores or estimated parameters.
+2. Regularize model by fitting several models on bootstrap samples and
+   averaging their predictions (see Baging and random-forest).
 
 A great advantage of bootstrap is its simplicity. It is a
 straightforward way to derive estimates of standard errors and
@@ -746,32 +907,13 @@ correlation coefficients.
 1. Perform :math:`B` sampling, with replacement, of the dataset.
 2. For each sample :math:`i` fit the model and compute the scores.
 3. Assess standard errors and confidence intervals of scores using the
-   scores obtained on the :math:`B` resampled dataset.
+   scores obtained on the :math:`B` resampled dataset. Or, average
+   models predictions.
 
 .. code:: ipython3
 
-    import numpy as np
-    from sklearn import datasets
-    import sklearn.linear_model as lm
-    import sklearn.metrics as metrics
     import pandas as pd
     
-    # Regression dataset
-    n_features = 5
-    n_features_info = 2
-    n_samples = 100
-    X = np.random.randn(n_samples, n_features)
-    beta = np.zeros(n_features)
-    beta[:n_features_info] = 1
-    Xbeta = np.dot(X, beta)
-    eps = np.random.randn(n_samples)
-    y = Xbeta + eps
-    
-    # Fit model on all data (!! risk of overfit)
-    model = lm.RidgeCV()
-    model.fit(X, y)
-    print("Coefficients on all data:")
-    print(model.coef_)
     
     # Bootstrap loop
     nboot = 100  # !! Should be at least 1000
@@ -795,7 +937,7 @@ correlation coefficients.
     scores_stat = scores_boot.describe(percentiles=[.975, .5, .025])
     
     print("r-squared: Mean=%.2f, SE=%.2f, CI=(%.2f %.2f)" %\
-          tuple(scores_stat.loc[["mean", "std", "5%", "95%"], "r2"]))
+          tuple(scores_stat.loc[["mean", "std", "2.5%", "97.5%"], "r2"]))
     
     coefs_boot = pd.DataFrame(coefs_boot)
     coefs_stat = coefs_boot.describe(percentiles=[.975, .5, .025])
@@ -805,17 +947,16 @@ correlation coefficients.
 
 .. parsed-literal::
 
-    Coefficients on all data:
-    [ 1.0257263   1.11323    -0.0499828  -0.09263008  0.15267576]
-    r-squared: Mean=0.61, SE=0.10, CI=(nan nan)
+    r-squared: Mean=0.59, SE=0.09, CI=(0.40 0.73)
     Coefficients distribution
                     0           1           2           3           4
     count  100.000000  100.000000  100.000000  100.000000  100.000000
-    mean     1.012534    1.132775   -0.056369   -0.100046    0.164236
-    std      0.094269    0.104934    0.111308    0.095098    0.095656
-    min      0.759189    0.836394   -0.290386   -0.318755   -0.092498
-    2.5%     0.814260    0.948158   -0.228483   -0.268790   -0.044067
-    50%      1.013097    1.125304   -0.057039   -0.099281    0.164194
-    97.5%    1.170183    1.320637    0.158680    0.085064    0.331809
-    max      1.237874    1.340585    0.291111    0.151059    0.450812
+    mean     1.017598    1.053832    0.212464   -0.018828   -0.045851
+    std      0.091508    0.105196    0.097532    0.097343    0.110555
+    min      0.631917    0.819190   -0.002689   -0.231580   -0.270810
+    2.5%     0.857418    0.883319    0.032672   -0.195018   -0.233241
+    50%      1.027161    1.038053    0.216531   -0.010023   -0.063331
+    97.5%    1.174707    1.289990    0.392701    0.150340    0.141587
+    max      1.204006    1.449672    0.432764    0.220711    0.290928
+
 
