@@ -776,11 +776,8 @@ Hinge-loss Elastic-net
 
 -  Conclude on the differences between the two losses.
 
-Metrics of classification performance evaluation
-------------------------------------------------
-
-Metrics for binary classification
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Classification performance evaluation metrics
+---------------------------------------------
 
 source: https://en.wikipedia.org/wiki/Sensitivity_and_specificity
 

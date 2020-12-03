@@ -46,11 +46,12 @@
 <div class="section" id="upload-to-github">
 <h1>Upload to github<a class="headerlink" href="#upload-to-github" title="Permalink to this headline">¶</a></h1>
 <p>“$WD/build/html” contains the pystsamsl website. Now we start to upload to github server. Clone from github to a temporary directory, and checkout gh-pages branch</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<p>First time
+<code class="docutils literal notranslate"><span class="pre">`</span>
 <span class="pre">WD=~/git/pystatsml</span>
-<span class="pre">cd</span> <span class="pre">/tmp</span>
-<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:duchesnay/pystatsml.git</span> <span class="pre">pystatsml_doc</span>
-<span class="pre">cd</span> <span class="pre">pystatsml_doc</span>
+<span class="pre">cd</span> <span class="pre">~/git</span>
+<span class="pre">mv</span> <span class="pre">pystatsml_gh-pages</span> <span class="pre">pystatsml_gh-pages.bak</span>
+<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:duchesnay/pystatsml.git</span> <span class="pre">pystatsml_gh-pages</span>
 <span class="pre">git</span> <span class="pre">symbolic-ref</span> <span class="pre">HEAD</span> <span class="pre">refs/heads/gh-pages</span>
 <span class="pre">rm</span> <span class="pre">.git/index</span>
 <span class="pre">git</span> <span class="pre">clean</span> <span class="pre">-fdx</span>
@@ -62,9 +63,27 @@
 <span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_static</span>
 <span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_images</span>
 <span class="pre">touch</span> <span class="pre">.nojekyll</span>
+<span class="pre">gedit</span> <span class="pre">index.html</span> <span class="pre">#</span> <span class="pre">see</span> <span class="pre">blow</span>
 <span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;gh-pages</span> <span class="pre">First</span> <span class="pre">commit&quot;</span>
 <span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
-<span class="pre">firefox</span>&#160; <span class="pre">$WD/build/html/index.html</span>
+<span class="pre">firefox</span>&#160; <span class="pre">index.html</span>
+<span class="pre">`</span></code></p>
+<p>Update
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">WD=~/git/pystatsml</span>
+<span class="pre">cd</span> <span class="pre">~/git/pystatsml_gh-pages</span>
+<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">gh-pages</span>
+<span class="pre">rsync</span> <span class="pre">-avu</span> <span class="pre">$WD/build/html/*</span> <span class="pre">./</span>
+<span class="pre">rsync</span> <span class="pre">-avu</span> <span class="pre">$WD/auto_gallery</span> <span class="pre">./</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">.</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">auto_gallery</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_sources</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_static</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_images</span>
+<span class="pre">gedit</span> <span class="pre">index.html</span> <span class="pre">#</span> <span class="pre">see</span> <span class="pre">blow</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;gh-pages</span> <span class="pre">update</span> <span class="pre">commit&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">index.html</span>
 <span class="pre">`</span></code></p>
 <p>Then
 <a href="#id1"><span class="problematic" id="id2">``</span></a>`
@@ -142,18 +161,9 @@ Python&lt;a class=”headerlink” href=”#phantom” title=”Permalink to thi
 </li>
 </ul>
 </div>
-<div class="section" id="a-gallery-of-interesting-ipython-notebooks">
-<h1>A gallery of interesting IPython Notebooks<a class="headerlink" href="#a-gallery-of-interesting-ipython-notebooks" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/ipython/ipython/wiki/A-gallery-of-interesting-IPython-Notebooks">https://github.com/ipython/ipython/wiki/A-gallery-of-interesting-IPython-Notebooks</a></p>
-</div>
-<div class="section" id="ipython-notebooks">
-<h1>IPython notebooks<a class="headerlink" href="#ipython-notebooks" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference external" href="https://ipython.org/ipython-doc/3/notebook/index.html">https://ipython.org/ipython-doc/3/notebook/index.html</a></p></li>
-<li><p><a class="reference external" href="http://nbviewer.ipython.org/github/ipython/ipython/tree/1.x/examples/">http://nbviewer.ipython.org/github/ipython/ipython/tree/1.x/examples/</a></p></li>
-<li><p><a class="reference external" href="http://www.kevinsheppard.com/Python_Course/IPython_Notebooks">http://www.kevinsheppard.com/Python_Course/IPython_Notebooks</a></p></li>
-<li><p>Shortcuts: <a class="reference external" href="http://johnlaudun.org/20131228-ipython-notebook-keyboard-shortcuts/">http://johnlaudun.org/20131228-ipython-notebook-keyboard-shortcuts/</a></p></li>
-</ul>
+<div class="section" id="jupyter-notebooks">
+<h1>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://jupyterbook.org/advanced/advanced.html#jupyter-cell-tags">https://jupyterbook.org/advanced/advanced.html#jupyter-cell-tags</a></p>
 </div>
 <div class="section" id="markdown">
 <h1>Markdown<a class="headerlink" href="#markdown" title="Permalink to this headline">¶</a></h1>

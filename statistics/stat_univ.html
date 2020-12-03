@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Lab Brain volumes study" href="../auto_gallery/stat_univ_lab_brain-volume.html" />
+    <link rel="next" title="Lab: Brain volumes study" href="../auto_gallery/stat_univ_lab_brain-volume.html" />
     <link rel="prev" title="data visualization: Matplotlib &amp; Seaborn" href="../scientific_python/scipy_matplotlib.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -143,8 +143,8 @@ previous results.</p></li>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">xycov</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">0.0089098</span>  <span class="mf">0.00386666</span><span class="p">]</span>
- <span class="p">[</span><span class="mf">0.00386666</span> <span class="mf">0.01180061</span><span class="p">]]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">0.00325715</span> <span class="mf">0.00100748</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.00100748</span> <span class="mf">0.0050682</span> <span class="p">]]</span>
 </pre></div>
 </div>
 </div>
@@ -174,7 +174,7 @@ distributed, regardless of the underlying distribution.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7fed5ce47350</span><span class="o">&gt;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f990ffa4a50</span><span class="o">&gt;</span><span class="p">]</span>
 </pre></div>
 </div>
 <img alt="../_images/stat_univ_3_1.png" src="../_images/stat_univ_3_1.png" />
@@ -558,7 +558,7 @@ with <span class="math notranslate nohighlight">\(n-2\)</span> degrees of freedo
 <span class="nb">print</span><span class="p">(</span><span class="n">cor</span><span class="p">,</span> <span class="n">pval</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">0.9422830911271459</span> <span class="mf">1.8817432721241486e-24</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">0.8668027908386681</span> <span class="mf">4.0978163272390636e-16</span>
 </pre></div>
 </div>
 </div>
@@ -1152,99 +1152,6 @@ n~\bar{y} = n~\beta~\bar{x} + n~\beta_0\\
 <img alt="../_images/stat_univ_39_3.png" src="../_images/stat_univ_39_3.png" />
 </div>
 </div>
-<div class="section" id="regression-measures-of-goodness-of-fit-losses">
-<h3>Regression measures of goodness of fit (losses)<a class="headerlink" href="#regression-measures-of-goodness-of-fit-losses" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="r-squared">
-<h4>R-squared<a class="headerlink" href="#r-squared" title="Permalink to this headline">¶</a></h4>
-<p>The goodness of fit of a statistical model describes how well it fits a
-set of observations. Measures of goodness of fit typically summarize the
-discrepancy between observed values and the values expected under the
-model in question. We will consider the <strong>explained variance</strong> also
-known as the coefficient of determination, denoted <span class="math notranslate nohighlight">\(R^2\)</span>
-pronounced <strong>R-squared</strong>.</p>
-<p>The total sum of squares, <span class="math notranslate nohighlight">\(SS_\text{tot}\)</span> is the sum of the sum of
-squares explained by the regression, <span class="math notranslate nohighlight">\(SS_\text{reg}\)</span>, plus the sum
-of squares of residuals unexplained by the regression,
-<span class="math notranslate nohighlight">\(SS_\text{res}\)</span>, also called the SSE, i.e. such that</p>
-<div class="math notranslate nohighlight">
-\[SS_\text{tot} = SS_\text{reg} + SS_\text{res}\]</div>
-<div class="figure align-default" id="id17">
-<img alt="title" src="../_images/Coefficient_of_Determination.png" />
-<p class="caption"><span class="caption-text">title</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
-</div>
-<p>The mean of <span class="math notranslate nohighlight">\(y\)</span> is</p>
-<div class="math notranslate nohighlight">
-\[\bar{y} = \frac{1}{n}\sum_i y_i.\]</div>
-<p>The total sum of squares is the total squared sum of deviations from the
-mean of <span class="math notranslate nohighlight">\(y\)</span>, i.e.</p>
-<div class="math notranslate nohighlight">
-\[SS_\text{tot}=\sum_i (y_i-\bar{y})^2\]</div>
-<p>The regression sum of squares, also called the explained sum of squares:</p>
-<div class="math notranslate nohighlight">
-\[SS_\text{reg} = \sum_i (\hat{y}_i -\bar{y})^2,\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat{y}_i = \beta x_i + \beta_0\)</span> is the estimated value of
-salary <span class="math notranslate nohighlight">\(\hat{y}_i\)</span> given a value of experience <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
-<p>The sum of squares of the residuals, also called the residual sum of
-squares (RSS) is:</p>
-<div class="math notranslate nohighlight">
-\[SS_\text{res}=\sum_i (y_i - \hat{y_i})^2.\]</div>
-<p><span class="math notranslate nohighlight">\(R^2\)</span> is the explained sum of squares of errors. It is the
-variance explain by the regression divided by the total variance, i.e.</p>
-<div class="math notranslate nohighlight">
-\[R^2 = \frac{\text{explained SS}}{\text{total SS}}
-    = \frac{SS_\text{reg}}{SS_{tot}}
-    = 1 - {SS_{res}\over SS_{tot}}.\]</div>
-<p><em>Test</em></p>
-<p>Let <span class="math notranslate nohighlight">\(\hat{\sigma}^2 = SS_\text{res} / (n-2)\)</span> be an estimator of
-the variance of <span class="math notranslate nohighlight">\(\epsilon\)</span>. The <span class="math notranslate nohighlight">\(2\)</span> in the denominator stems
-from the 2 estimated parameters: intercept and coefficient.</p>
-<ul class="simple">
-<li><p><strong>Unexplained variance</strong>:
-<span class="math notranslate nohighlight">\(\frac{SS_\text{res}}{\hat{\sigma}^2} \sim \chi_{n-2}^2\)</span></p></li>
-<li><p><strong>Explained variance</strong>:
-<span class="math notranslate nohighlight">\(\frac{SS_\text{reg}}{\hat{\sigma}^2} \sim \chi_{1}^2\)</span>. The
-single degree of freedom comes from the difference between
-<span class="math notranslate nohighlight">\(\frac{SS_\text{tot}}{\hat{\sigma}^2} (\sim \chi^2_{n-1})\)</span> and
-<span class="math notranslate nohighlight">\(\frac{SS_\text{res}}{\hat{\sigma}^2} (\sim \chi_{n-2}^2)\)</span>,
-i.e. <span class="math notranslate nohighlight">\((n-1) - (n-2)\)</span> degree of freedom.</p></li>
-</ul>
-<p>The Fisher statistics of the ratio of two variances:</p>
-<div class="math notranslate nohighlight">
-\[F = \frac{\text{Explained variance}}{\text{Unexplained variance}} = \frac{SS_\text{reg} / 1}{ SS_\text{res} / (n - 2)} \sim F(1, n-2)\]</div>
-<p>Using the <span class="math notranslate nohighlight">\(F\)</span>-distribution, compute the probability of observing a
-value greater than <span class="math notranslate nohighlight">\(F\)</span> under <span class="math notranslate nohighlight">\(H_0\)</span>, i.e.:
-<span class="math notranslate nohighlight">\(P(x &gt; F|H_0)\)</span>, i.e. the survival function
-<span class="math notranslate nohighlight">\((1 - \text{Cumulative Distribution Function})\)</span> at <span class="math notranslate nohighlight">\(x\)</span> of
-the given <span class="math notranslate nohighlight">\(F\)</span>-distribution.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">beta0</span><span class="p">)</span>
-
-<span class="n">y_mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_mu</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">res</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;r-squared: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ss_res</span> <span class="o">/</span> <span class="n">ss_tot</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span> <span class="mf">0.932</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="mse-and-mae">
-<h4>MSE and MAE<a class="headerlink" href="#mse-and-mae" title="Permalink to this headline">¶</a></h4>
-<ul class="simple">
-<li><p>MSE: Mean Squared Error</p></li>
-<li><p>MAE: Mean Absolute Error</p></li>
-</ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MSE </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">res</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MAE </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">res</span><span class="p">)))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MSE</span> <span class="mf">459923.068</span>
-<span class="n">MAE</span> <span class="mf">602.265</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="section" id="multiple-regression">
 <h3>Multiple regression<a class="headerlink" href="#multiple-regression" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="theory">
@@ -1352,8 +1259,8 @@ rewritten</strong>:</p>
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.363</span>
 <span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.322</span>
 <span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">8.748</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Sat</span><span class="p">,</span> <span class="mi">21</span> <span class="n">Nov</span> <span class="mi">2020</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">23</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">57</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Dec</span> <span class="mi">2020</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">15</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">07</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
 <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">50</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">150.5</span>
 <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">46</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">158.2</span>
 <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">3</span>
@@ -1397,8 +1304,8 @@ rewritten</strong>:</p>
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.363</span>
 <span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.322</span>
 <span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">8.748</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Sat</span><span class="p">,</span> <span class="mi">21</span> <span class="n">Nov</span> <span class="mi">2020</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">23</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">57</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Dec</span> <span class="mi">2020</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">15</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">07</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
 <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">50</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">150.5</span>
 <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">46</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">158.2</span>
 <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">3</span>
@@ -1467,8 +1374,8 @@ variables that are not of primary interest, known as covariates (CV).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Jarque</span><span class="o">-</span><span class="n">Bera</span> <span class="n">normality</span> <span class="n">test</span> <span class="n">p</span><span class="o">-</span><span class="n">value</span> <span class="mf">0.04374</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_univ_54_1.png" src="../_images/stat_univ_54_1.png" />
-<img alt="../_images/stat_univ_54_2.png" src="../_images/stat_univ_54_2.png" />
+<img alt="../_images/stat_univ_50_1.png" src="../_images/stat_univ_50_1.png" />
+<img alt="../_images/stat_univ_50_2.png" src="../_images/stat_univ_50_2.png" />
 <p>Normality assumption of the residuals can be rejected (p-value &lt; 0.05).
 There is an efect of the “management” factor, take it into account.</p>
 <div class="section" id="one-way-an-c-ova">
@@ -1491,7 +1398,7 @@ There is an efect of the “management” factor, take it into account.</p>
 <span class="n">Jarque</span><span class="o">-</span><span class="n">Bera</span> <span class="n">normality</span> <span class="n">test</span> <span class="n">p</span><span class="o">-</span><span class="n">value</span> <span class="mf">0.004</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_univ_57_1.png" src="../_images/stat_univ_57_1.png" />
+<img alt="../_images/stat_univ_53_1.png" src="../_images/stat_univ_53_1.png" />
 <p>Distribution of residuals is still not normal but closer to normality.
 Both management and experience are significantly associated with salary.</p>
 </div>
@@ -1515,7 +1422,7 @@ Both management and experience are significantly associated with salary.</p>
 <span class="n">Jarque</span><span class="o">-</span><span class="n">Bera</span> <span class="n">normality</span> <span class="n">test</span> <span class="n">p</span><span class="o">-</span><span class="n">value</span> <span class="mf">0.506</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_univ_60_1.png" src="../_images/stat_univ_60_1.png" />
+<img alt="../_images/stat_univ_56_1.png" src="../_images/stat_univ_56_1.png" />
 <p>Normality assumtion cannot be rejected. Assume it. Education, management
 and experience are significantly associated with salary.</p>
 </div>
@@ -1611,7 +1518,7 @@ using an <span class="math notranslate nohighlight">\(F\)</span>-test on residua
     <span class="n">tvals</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;g1&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;g2&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
                                          <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="c1">#, sharex=&#39;col&#39;)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span><span class="c1">#, sharex=&#39;col&#39;)</span>
 
 <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">tvals</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;t-value&quot;</span><span class="p">)</span>
@@ -1631,7 +1538,7 @@ using an <span class="math notranslate nohighlight">\(F\)</span>-test on residua
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_univ_70_0.png" src="../_images/stat_univ_70_0.png" />
+<img alt="../_images/stat_univ_66_0.png" src="../_images/stat_univ_66_0.png" />
 <p>Note that under the null hypothesis the distribution of the <em>p</em>-values
 is uniform.</p>
 <p>Statistical measures:</p>
@@ -1950,7 +1857,7 @@ size <code class="docutils literal notranslate"><span class="pre">n_features</sp
 <li class="toctree-l2"><a class="reference internal" href="#exercises">Exercises</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stat_multiv.html">Multivariate statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="time_series.html">Time Series in python</a></li>
 </ul>
@@ -1978,7 +1885,7 @@ size <code class="docutils literal notranslate"><span class="pre">n_features</sp
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../scientific_python/scipy_matplotlib.html" title="previous chapter">data visualization: Matplotlib &amp; Seaborn</a></li>
-      <li>Next: <a href="../auto_gallery/stat_univ_lab_brain-volume.html" title="next chapter">Lab Brain volumes study</a></li>
+      <li>Next: <a href="../auto_gallery/stat_univ_lab_brain-volume.html" title="next chapter">Lab: Brain volumes study</a></li>
   </ul></li>
 </ul>
 </div>

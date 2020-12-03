@@ -84,7 +84,7 @@ follow the same application programming interface (API), namely:
     %matplotlib inline
     
     # Fit Ordinary Least Squares: OLS
-    csv = pd.read_csv('https://raw.githubusercontent.com/neurospin/pystatsml/master/datasets/Advertising.csv', index_col=0)
+    csv = pd.read_csv('https://github.com/duchesnay/pystatsml/raw/master/datasets/Advertising.csv', index_col=0)
     X = csv[['TV', 'Radio']]
     y = csv['Sales']
     
@@ -95,7 +95,8 @@ follow the same application programming interface (API), namely:
     print("Coefficients =", lr.coef_)
     
     # Plot
-    fig = plt.figure()
+    fig = plt.figure(figsize=(6, 6))
+    #fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     
     ax.scatter(csv['TV'], csv['Radio'], csv['Sales'], c='r', marker='o')
@@ -104,11 +105,10 @@ follow the same application programming interface (API), namely:
         np.linspace(csv['TV'].min(), csv['TV'].max(), num=10),
         np.linspace(csv['Radio'].min(), csv['Radio'].max(), num=10))
     
-    
     XX = np.column_stack([xx1.ravel(), xx2.ravel()])
     
     yy = lr.predict(XX)
-    ax.plot_surface(xx1, xx2, yy.reshape(xx1.shape), color='None')
+    ax.plot_wireframe(xx1, xx2, yy.reshape(xx1.shape))
     ax.set_xlabel('TV')
     ax.set_ylabel('Radio')
     _ = ax.set_zlabel('Sales')
@@ -117,7 +117,7 @@ follow the same application programming interface (API), namely:
 .. parsed-literal::
 
     R-squared = 0.8971942610828956
-    Coefficients = [0.04575482 0.18799423]
+    Coefficients = [0.  0.2]
 
 
 
@@ -171,7 +171,12 @@ the ordinary least-squares estimator,
 does not exist.
 
 An example where correlated predictor may produce an unstable model
-follows:
+follows: We want to predict the business potential (pb) of some
+companies given their business volume (bv) and the taxes (tx) they are
+paying. Here pb ~ 10% of bv. However, taxes = 20% of bv (tax and bv are
+highly collinear), therefore there is an infinite number of linear
+combinations of tax and bv that lead to the same prediction. Solutions
+with very large coefficients will produce excessively large predictions.
 
 .. code:: ipython3
 
@@ -248,7 +253,9 @@ algorithm is based on the relative size of :math:`P` and :math:`N`.
 -  The sampling density of :math:`N` samples in an :math:`P`-dimensional
    space is proportional to :math:`N^{1/P}`. Thus a high-dimensional
    space becomes very sparse, leading to poor estimations of samples
-   densities.
+   densities. To preserve a constant density, an exponential growth in
+   the number of observations is required. 50 points in 1D, would
+   require 2 500 points in 2D and 125 000 in 3D !
 
 -  Another consequence of the sparse sampling in high dimensions is that
    all sample points are close to an edge of the sample. Consider
@@ -261,7 +268,7 @@ algorithm is based on the relative size of :math:`P` and :math:`N`.
 .. math::
 
 
-   d(P, N) = \left(1 - \frac{1}{2}^N\right)^{1/P}.
+   d(P, N) = \left(1 - \frac{1}{2}^(1/N)\right)^{1/P}.
 
 A more complicated expression exists for the mean distance to the
 closest point. For N = 500, P = 10 , :math:`d(P, N ) \approx 0.52`, more
@@ -279,109 +286,8 @@ Learning: Data Mining, Inference, and Prediction.* Second Edition,
 
 -  See also bias–variance trade-off.
 
-.. code:: ipython3
-
-    import seaborn # nicer plots
-    
-    def fit_on_increasing_size(model):
-        n_samples = 100
-        n_features_ = np.arange(10, 800, 20)
-        r2_train, r2_test, snr = [], [], []
-        for n_features in n_features_:
-            # Sample the dataset (* 2 nb of samples)
-            n_features_info = int(n_features/10)
-            np.random.seed(42)  # Make reproducible
-            X = np.random.randn(n_samples * 2, n_features)
-            beta = np.zeros(n_features)
-            beta[:n_features_info] = 1
-            Xbeta = np.dot(X, beta)
-            eps = np.random.randn(n_samples * 2)
-            y =  Xbeta + eps
-            # Split the dataset into train and test sample
-            Xtrain, Xtest = X[:n_samples, :], X[n_samples:, :]
-            ytrain, ytest = y[:n_samples], y[n_samples:]
-            # fit/predict
-            lr = model.fit(Xtrain, ytrain)
-            y_pred_train = lr.predict(Xtrain)
-            y_pred_test = lr.predict(Xtest)
-            snr.append(Xbeta.std() / eps.std())
-            r2_train.append(metrics.r2_score(ytrain, y_pred_train))
-            r2_test.append(metrics.r2_score(ytest, y_pred_test))
-        return n_features_, np.array(r2_train), np.array(r2_test), np.array(snr)
-    
-    def plot_r2_snr(n_features_, r2_train, r2_test, xvline, snr, ax):
-        """
-        Two scales plot. Left y-axis: train test r-squared. Right y-axis SNR.
-        """
-        ax.plot(n_features_, r2_train, label="Train r-squared", linewidth=2)
-        ax.plot(n_features_, r2_test, label="Test r-squared", linewidth=2)
-        ax.axvline(x=xvline, linewidth=2, color='k', ls='--')
-        ax.axhline(y=0, linewidth=1, color='k', ls='--')
-        ax.set_ylim(-0.2, 1.1)
-        ax.set_xlabel("Number of input features")
-        ax.set_ylabel("r-squared")
-        ax.legend(loc='best')
-        ax.set_title("Prediction perf.")
-        ax_right = ax.twinx()
-        ax_right.plot(n_features_, snr, 'r-', label="SNR", linewidth=1)
-        ax_right.set_ylabel("SNR", color='r')
-        for tl in ax_right.get_yticklabels():
-            tl.set_color('r')
-    
-    # Model = linear regression
-    mod = lm.LinearRegression()
-    
-    # Fit models on dataset
-    n_features, r2_train, r2_test, snr = fit_on_increasing_size(model=mod)
-    
-    argmax = n_features[np.argmax(r2_test)]
-    
-    # plot
-    fig, axis = plt.subplots(1, 2, figsize=(9, 3))
-    
-    # Left pane: all features
-    plot_r2_snr(n_features, r2_train, r2_test, argmax, snr, axis[0])
-    
-    # Right pane: Zoom on 100 first features
-    plot_r2_snr(n_features[n_features <= 100], 
-                r2_train[n_features <= 100], r2_test[n_features <= 100],
-                argmax,
-                snr[n_features <= 100],
-                axis[1])
-    plt.tight_layout()
-
-
-
-.. image:: linear_regression_files/linear_regression_8_0.png
-
-
-Exercises
-~~~~~~~~~
-
-Study the code above and:
-
--  Describe the datasets: :math:`N`: ``nb_samples``, :math:`P`:
-   ``nb_features``.
-
--  What is ``n_features_info``?
-
--  Give the equation of the generative model.
-
--  What is modified by the loop?
-
--  What is the SNR?
-
-Comment the graph above, in terms of training and test performances:
-
--  How does the train and test performance changes as a function of
-   :math:`x`?
-
--  Is it the expected results when compared to the SNR?
-
--  What can you conclude?
-
-Ridge regression (:math:`\ell_2`-regularization)
-------------------------------------------------
+Regularization using penalization of coeffients
+-----------------------------------------------
 
 Regarding linear models, overfitting generally leads to excessively
 complex solutions (coefficient vectors), accounting for noise or
@@ -409,6 +315,61 @@ leading to the general form:
 
 The respective contribution of the loss and the penalty is controlled by
 the **regularization parameter** :math:`\lambda`.
+
+The next figure shows the predicted performance (r-squared) on train and
+test sets with an increasing number of input features. The number of
+predictive features is always 10% of the total number of input features.
+Therefore, the signal to noise ratio (SNR) increases by increasing the
+number of input features. The performances on the training set rapidly
+reach 100% (R2=1). However, the performance on the test set decreases
+with the increase of the input dimensionality. The difference between
+the train and test performances (blue shaded region) depicts the
+overfitting phenomena. Regularisation using penalties of the norm
+(:math:`\ell_2` a.k.a. Ridge, :math:`\ell_1` a.k.a. Lasso,
+:math:`\ell_2, \ell_1` a.k.a. ElasticNet) of the coefficient vector
+greatly limits the overfitting phenomena.
+
+.. figure:: images/linear_regression_penalties.png
+   :alt: Multicollinearity between the predictors
+
+   Multicollinearity between the predictors
+
+With scikit-learn:
+
+.. code:: ipython3
+
+    from sklearn import datasets
+    import  sklearn.linear_model as lm
+    np.set_printoptions(precision=1)
+    
+    # Dataset with some correlation
+    X, y, coef = datasets.make_regression(n_samples=100, n_features=10, n_informative=5, random_state=0,
+                                          effective_rank=3, coef=True)
+    
+    lr = lm.LinearRegression().fit(X, y)
+    
+    l2 = lm.Ridge(alpha=10).fit(X, y)  # lambda is alpha!
+    
+    l1 = lm.Lasso(alpha=.1).fit(X, y)  # lambda is alpha !
+    
+    l1l2 = lm.ElasticNet(alpha=.1, l1_ratio=.9).fit(X, y)
+    
+    print("True :", coef)
+    print("Ridge:", l2.coef_)
+    print("Lasso:", l1.coef_)
+    print("Enet :", l1l2.coef_)
+
+
+.. parsed-literal::
+
+    True : [28.5  0.  13.2  0.  49.  70.4 39.7  0.   0.   0. ]
+    Ridge: [ 1.   0.2  0.9 -0.3  1.8  1.6  2.1 -1.1 -0.8 -1. ]
+    Lasso: [ 0.  -0.   0.  -0.  24.4 25.2 25.4 -0.  -0.  -0. ]
+    Enet : [ 0.8  0.   0.5 -0.   7.2  5.7  8.9 -1.4 -0.  -0.4]
+
+
+Ridge regression (:math:`\ell_2`-regularization)
+------------------------------------------------
 
 Ridge regression impose a :math:`\ell_2` penalty on the coefficients,
 i.e. it penalizes with the Euclidean norm of the coefficients while
@@ -455,46 +416,6 @@ The gradient of the loss:
 
    \partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})
 
-
-
-.. code:: ipython3
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sklearn.linear_model as lm
-    
-    # lambda is alpha!
-    mod = lm.Ridge(alpha=10)
-    
-    # Fit models on dataset
-    n_features, r2_train, r2_test, snr = fit_on_increasing_size(model=mod)
-    
-    argmax = n_features[np.argmax(r2_test)]
-    
-    # plot
-    fig, axis = plt.subplots(1, 2, figsize=(9, 3))
-    
-    # Left pane: all features
-    plot_r2_snr(n_features, r2_train, r2_test, argmax, snr, axis[0])
-    
-    # Right pane: Zoom on 100 first features
-    plot_r2_snr(n_features[n_features <= 100], 
-                r2_train[n_features <= 100], r2_test[n_features <= 100],
-                argmax,
-                snr[n_features <= 100],
-                axis[1])
-    plt.tight_layout()
-
-
-
-.. image:: linear_regression_files/linear_regression_12_0.png
-
-
-Exercice
-~~~~~~~~
-
-What benefit has been obtained by using :math:`\ell_2` regularization?
-
 Lasso regression (:math:`\ell_1`-regularization)
 ------------------------------------------------
 
@@ -507,44 +428,11 @@ becomes:
 .. raw:: latex
 
    \begin{align}
-   \text{Lasso}(\mathbf{w}) &= \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda\|\mathbf{w}\|_1.
+   \text{Lasso}(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2 + \lambda\|\mathbf{w}\|_1.
    \end{align}
 
 This penalty forces some coefficients to be exactly zero, providing a
 feature selection property.
-
-.. code:: ipython3
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sklearn.linear_model as lm
-    
-    # lambda is alpha !
-    mod = lm.Lasso(alpha=.1)
-    
-    # Fit models on dataset
-    n_features, r2_train, r2_test, snr = fit_on_increasing_size(model=mod)
-    
-    argmax = n_features[np.argmax(r2_test)]
-    
-    # plot
-    fig, axis = plt.subplots(1, 2, figsize=(9, 3))
-    
-    # Left pane: all features
-    plot_r2_snr(n_features, r2_train, r2_test, argmax, snr, axis[0])
-    
-    # Right pane: Zoom on 200 first features
-    plot_r2_snr(n_features[n_features <= 200], 
-                r2_train[n_features <= 200], r2_test[n_features <= 200],
-                argmax,
-                snr[n_features <= 200],
-                axis[1])
-    plt.tight_layout()
-
-
-
-.. image:: linear_regression_files/linear_regression_15_0.png
-
 
 Sparsity of the :math:`\ell_1` norm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -640,7 +528,7 @@ penalties, and results in the problem to
 .. raw:: latex
 
    \begin{align}
-   \text{Enet}(\mathbf{w}) &= \|\mathbf{y} - \mathbf{X}^T\mathbf{w}\|_2^2 + \alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right),
+   \text{Enet}(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2 + \alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right),
    \end{align}
 
 where :math:`\alpha` acts as a global penalty and :math:`\rho` as an
@@ -661,34 +549,158 @@ Rational
    elastic net often outperforms the lasso, while enjoying a similar
    sparsity of representation.
 
+Regression performance evaluation metrics: R-squared, MSE and MAE
+-----------------------------------------------------------------
+
+Common regression
+`metrics <https://scikit-learn.org/stable/modules/model_evaluation.html>`__
+are:
+
+-  :math:`R^2` : R-squared
+-  MSE: Mean Squared Error
+-  MAE: Mean Absolute Error
+
+R-squared
+~~~~~~~~~
+
+The goodness of fit of a statistical model describes how well it fits a
+set of observations. Measures of goodness of fit typically summarize the
+discrepancy between observed values and the values expected under the
+model in question. We will consider the **explained variance** also
+known as the coefficient of determination, denoted :math:`R^2`
+pronounced **R-squared**.
+
+The total sum of squares, :math:`SS_\text{tot}` is the sum of the sum of
+squares explained by the regression, :math:`SS_\text{reg}`, plus the sum
+of squares of residuals unexplained by the regression,
+:math:`SS_\text{res}`, also called the SSE, i.e. such that
+
+.. math::
+
+
+   SS_\text{tot} = SS_\text{reg} + SS_\text{res}
+
+.. figure:: images/Coefficient_of_Determination.png
+   :alt: title
+
+   title
+
+The mean of :math:`y` is
+
+.. math::
+
+
+   \bar{y} = \frac{1}{n}\sum_i y_i.
+
+The total sum of squares is the total squared sum of deviations from the
+mean of :math:`y`, i.e.
+
+.. math::
+
+
+   SS_\text{tot}=\sum_i (y_i-\bar{y})^2
+
+The regression sum of squares, also called the explained sum of squares:
+
+.. math::
+
+
+   SS_\text{reg} = \sum_i (\hat{y}_i -\bar{y})^2,
+
+where :math:`\hat{y}_i = \beta x_i + \beta_0` is the estimated value of
+salary :math:`\hat{y}_i` given a value of experience :math:`x_i`.
+
+The sum of squares of the residuals (**SSE, Sum Squared Error**), also
+called the residual sum of squares (RSS) is:
+
+.. math::
+
+
+   SS_\text{res}=\sum_i (y_i - \hat{y_i})^2.
+
+:math:`R^2` is the explained sum of squares of errors. It is the
+variance explain by the regression divided by the total variance, i.e.
+
+.. math::
+
+
+   R^2 = \frac{\text{explained SS}}{\text{total SS}}
+       = \frac{SS_\text{reg}}{SS_{tot}} 
+       = 1 - {SS_{res}\over SS_{tot}}.
+
+*Test*
+
+Let :math:`\hat{\sigma}^2 = SS_\text{res} / (n-2)` be an estimator of
+the variance of :math:`\epsilon`. The :math:`2` in the denominator stems
+from the 2 estimated parameters: intercept and coefficient.
+
+-  **Unexplained variance**:
+   :math:`\frac{SS_\text{res}}{\hat{\sigma}^2} \sim \chi_{n-2}^2`
+
+-  **Explained variance**:
+   :math:`\frac{SS_\text{reg}}{\hat{\sigma}^2} \sim \chi_{1}^2`. The
+   single degree of freedom comes from the difference between
+   :math:`\frac{SS_\text{tot}}{\hat{\sigma}^2} (\sim \chi^2_{n-1})` and
+   :math:`\frac{SS_\text{res}}{\hat{\sigma}^2} (\sim \chi_{n-2}^2)`,
+   i.e. :math:`(n-1) - (n-2)` degree of freedom.
+
+The Fisher statistics of the ratio of two variances:
+
+.. math::
+
+
+       F = \frac{\text{Explained variance}}{\text{Unexplained variance}} = \frac{SS_\text{reg} / 1}{ SS_\text{res} / (n - 2)} \sim F(1, n-2)
+
+Using the :math:`F`-distribution, compute the probability of observing a
+value greater than :math:`F` under :math:`H_0`, i.e.:
+:math:`P(x > F|H_0)`, i.e. the survival function
+:math:`(1 - \text{Cumulative Distribution Function})` at :math:`x` of
+the given :math:`F`-distribution.
+
 .. code:: ipython3
 
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sklearn.linear_model as lm
+    import sklearn.metrics as metrics
+    from sklearn.model_selection import train_test_split
     
-    mod = lm.ElasticNet(alpha=.5, l1_ratio=.5)
+    X, y = datasets.make_regression(random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=1)
     
-    # Fit models on dataset
-    n_features, r2_train, r2_test, snr = fit_on_increasing_size(model=mod)
+    lr = lm.LinearRegression()
+    lr.fit(X_train, y_train)
+    yhat = lr.predict(X_test)
     
-    argmax = n_features[np.argmax(r2_test)]
+    r2 = metrics.r2_score(y_test, yhat)
+    mse = metrics.mean_squared_error(y_test, yhat)
+    mae = metrics.mean_absolute_error(y_test, yhat)
     
-    # plot
-    fig, axis = plt.subplots(1, 2, figsize=(9, 3))
-    
-    # Left pane: all features
-    plot_r2_snr(n_features, r2_train, r2_test, argmax, snr, axis[0])
-    
-    # Right pane: Zoom on 100 first features
-    plot_r2_snr(n_features[n_features <= 100], 
-                r2_train[n_features <= 100], r2_test[n_features <= 100],
-                argmax,
-                snr[n_features <= 100],
-                axis[1])
-    plt.tight_layout()
+    print("r2: %.3f, mae: %.3f, mse: %.3f" % (r2, mae, mse))
 
 
+.. parsed-literal::
 
-.. image:: linear_regression_files/linear_regression_19_0.png
+    r2: 0.050, mae: 71.834, mse: 7891.217
+
+
+In pure numpy:
+
+.. code:: ipython3
+
+    res = y_test - lr.predict(X_test)
+    
+    y_mu = np.mean(y_test)
+    ss_tot = np.sum((y_test - y_mu) ** 2)
+    ss_res = np.sum(res ** 2)
+    
+    r2 = (1 - ss_res / ss_tot)
+    mse = np.mean(res ** 2)
+    mae = np.mean(np.abs(res))
+    
+    print("r2: %.3f, mae: %.3f, mse: %.3f" % (r2, mae, mse))
+
+
+.. parsed-literal::
+
+    r2: 0.050, mae: 71.834, mse: 7891.217
+
 

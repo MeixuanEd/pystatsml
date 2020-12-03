@@ -172,8 +172,8 @@ Warning! by default ``np.var()`` used the biased estimator ddof=0
 
 .. parsed-literal::
 
-    [[0.0089098  0.00386666]
-     [0.00386666 0.01180061]]
+    [[0.00325715 0.00100748]
+     [0.00100748 0.0050682 ]]
 
 
 Main distributions
@@ -211,7 +211,7 @@ distributed, regardless of the underlying distribution.
 
 .. parsed-literal::
 
-    [<matplotlib.lines.Line2D at 0x7fed5ce47350>]
+    [<matplotlib.lines.Line2D at 0x7f990ffa4a50>]
 
 
 
@@ -659,7 +659,7 @@ with :math:`n-2` degrees of freedom.
 
 .. parsed-literal::
 
-    0.9422830911271459 1.8817432721241486e-24
+    0.8668027908386681 4.0978163272390636e-16
 
 
 Two sample (Student) :math:`t`-test: compare two means
@@ -1450,140 +1450,6 @@ Divide both sides by :math:`n`:
 .. image:: stat_univ_files/stat_univ_39_3.png
 
 
-Regression measures of goodness of fit (losses)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-R-squared
-^^^^^^^^^
-
-The goodness of fit of a statistical model describes how well it fits a
-set of observations. Measures of goodness of fit typically summarize the
-discrepancy between observed values and the values expected under the
-model in question. We will consider the **explained variance** also
-known as the coefficient of determination, denoted :math:`R^2`
-pronounced **R-squared**.
-
-The total sum of squares, :math:`SS_\text{tot}` is the sum of the sum of
-squares explained by the regression, :math:`SS_\text{reg}`, plus the sum
-of squares of residuals unexplained by the regression,
-:math:`SS_\text{res}`, also called the SSE, i.e. such that
-
-.. math::
-
-
-   SS_\text{tot} = SS_\text{reg} + SS_\text{res}
-
-.. figure:: images/Coefficient_of_Determination.png
-   :alt: title
-
-   title
-
-The mean of :math:`y` is
-
-.. math::
-
-
-   \bar{y} = \frac{1}{n}\sum_i y_i.
-
-The total sum of squares is the total squared sum of deviations from the
-mean of :math:`y`, i.e.
-
-.. math::
-
-
-   SS_\text{tot}=\sum_i (y_i-\bar{y})^2
-
-The regression sum of squares, also called the explained sum of squares:
-
-.. math::
-
-
-   SS_\text{reg} = \sum_i (\hat{y}_i -\bar{y})^2,
-
-where :math:`\hat{y}_i = \beta x_i + \beta_0` is the estimated value of
-salary :math:`\hat{y}_i` given a value of experience :math:`x_i`.
-
-The sum of squares of the residuals, also called the residual sum of
-squares (RSS) is:
-
-.. math::
-
-
-   SS_\text{res}=\sum_i (y_i - \hat{y_i})^2.
-
-:math:`R^2` is the explained sum of squares of errors. It is the
-variance explain by the regression divided by the total variance, i.e.
-
-.. math::
-
-
-   R^2 = \frac{\text{explained SS}}{\text{total SS}}
-       = \frac{SS_\text{reg}}{SS_{tot}} 
-       = 1 - {SS_{res}\over SS_{tot}}.
-
-*Test*
-
-Let :math:`\hat{\sigma}^2 = SS_\text{res} / (n-2)` be an estimator of
-the variance of :math:`\epsilon`. The :math:`2` in the denominator stems
-from the 2 estimated parameters: intercept and coefficient.
-
--  **Unexplained variance**:
-   :math:`\frac{SS_\text{res}}{\hat{\sigma}^2} \sim \chi_{n-2}^2`
-
--  **Explained variance**:
-   :math:`\frac{SS_\text{reg}}{\hat{\sigma}^2} \sim \chi_{1}^2`. The
-   single degree of freedom comes from the difference between
-   :math:`\frac{SS_\text{tot}}{\hat{\sigma}^2} (\sim \chi^2_{n-1})` and
-   :math:`\frac{SS_\text{res}}{\hat{\sigma}^2} (\sim \chi_{n-2}^2)`,
-   i.e. :math:`(n-1) - (n-2)` degree of freedom.
-
-The Fisher statistics of the ratio of two variances:
-
-.. math::
-
-
-       F = \frac{\text{Explained variance}}{\text{Unexplained variance}} = \frac{SS_\text{reg} / 1}{ SS_\text{res} / (n - 2)} \sim F(1, n-2)
-
-Using the :math:`F`-distribution, compute the probability of observing a
-value greater than :math:`F` under :math:`H_0`, i.e.:
-:math:`P(x > F|H_0)`, i.e. the survival function
-:math:`(1 - \text{Cumulative Distribution Function})` at :math:`x` of
-the given :math:`F`-distribution.
-
-.. code:: ipython3
-
-    res = y - (x * beta + beta0)
-    
-    y_mu = np.mean(y)
-    ss_tot = np.sum((y - y_mu) ** 2)
-    ss_res = np.sum(res ** 2)
-    
-    print("r-squared: %.3f" % (1 - ss_res / ss_tot))
-
-
-.. parsed-literal::
-
-    r-squared: 0.932
-
-
-MSE and MAE
-^^^^^^^^^^^
-
--  MSE: Mean Squared Error
--  MAE: Mean Absolute Error
-
-.. code:: ipython3
-
-    print("MSE %.3f" % np.mean(res ** 2))
-    print("MAE %.3f" % np.mean(np.abs(res)))
-
-
-.. parsed-literal::
-
-    MSE 459923.068
-    MAE 602.265
-
-
 Multiple regression
 ~~~~~~~~~~~~~~~~~~~
 
@@ -1746,8 +1612,8 @@ Interface with statsmodels
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Sat, 21 Nov 2020   Prob (F-statistic):           0.000106
-    Time:                        23:51:57   Log-Likelihood:                -71.271
+    Date:                Thu, 03 Dec 2020   Prob (F-statistic):           0.000106
+    Time:                        15:38:07   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -1796,8 +1662,8 @@ Use ``R`` language syntax for data.frame. For an additive model:
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Sat, 21 Nov 2020   Prob (F-statistic):           0.000106
-    Time:                        23:51:57   Log-Likelihood:                -71.271
+    Date:                Thu, 03 Dec 2020   Prob (F-statistic):           0.000106
+    Time:                        15:38:07   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -1875,11 +1741,11 @@ variables that are not of primary interest, known as covariates (CV).
 
 
 
-.. image:: stat_univ_files/stat_univ_54_1.png
+.. image:: stat_univ_files/stat_univ_50_1.png
 
 
 
-.. image:: stat_univ_files/stat_univ_54_2.png
+.. image:: stat_univ_files/stat_univ_50_2.png
 
 
 Normality assumption of the residuals can be rejected (p-value < 0.05).
@@ -1911,7 +1777,7 @@ One-way AN(C)OVA
 
 
 
-.. image:: stat_univ_files/stat_univ_57_1.png
+.. image:: stat_univ_files/stat_univ_53_1.png
 
 
 Distribution of residuals is still not normal but closer to normality.
@@ -1944,7 +1810,7 @@ Ancova with two categorical independent variables, i.e. two factors.
 
 
 
-.. image:: stat_univ_files/stat_univ_60_1.png
+.. image:: stat_univ_files/stat_univ_56_1.png
 
 
 Normality assumtion cannot be rejected. Assume it. Education, management
@@ -2059,7 +1925,7 @@ Multiple comparisons
         tvals[j], pvals[j] = stats.ttest_ind(Y[grp=="g1", j], Y[grp=="g2", j],
                                              equal_var=True)
     
-    fig, axis = plt.subplots(3, 1)#, sharex='col')
+    fig, axis = plt.subplots(3, 1, figsize=(9, 9))#, sharex='col')
     
     axis[0].plot(range(n_features), tvals, 'o')
     axis[0].set_ylabel("t-value")
@@ -2080,7 +1946,7 @@ Multiple comparisons
 
 
 
-.. image:: stat_univ_files/stat_univ_70_0.png
+.. image:: stat_univ_files/stat_univ_66_0.png
 
 
 Note that under the null hypothesis the distribution of the *p*-values
