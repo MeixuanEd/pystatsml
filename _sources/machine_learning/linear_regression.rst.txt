@@ -255,7 +255,7 @@ algorithm is based on the relative size of :math:`P` and :math:`N`.
    space becomes very sparse, leading to poor estimations of samples
    densities. To preserve a constant density, an exponential growth in
    the number of observations is required. 50 points in 1D, would
-   require 2 500 points in 2D and 125 000 in 3D !
+   require 2 500 points in 2D and 125 000 in 3D!
 
 -  Another consequence of the sparse sampling in high dimensions is that
    all sample points are close to an edge of the sample. Consider
@@ -268,7 +268,7 @@ algorithm is based on the relative size of :math:`P` and :math:`N`.
 .. math::
 
 
-   d(P, N) = \left(1 - \frac{1}{2}^(1/N)\right)^{1/P}.
+   d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}.
 
 A more complicated expression exists for the mean distance to the
 closest point. For N = 500, P = 10 , :math:`d(P, N ) \approx 0.52`, more

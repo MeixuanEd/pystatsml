@@ -241,7 +241,7 @@ space is proportional to <span class="math notranslate nohighlight">\(N^{1/P}\)<
 space becomes very sparse, leading to poor estimations of samples
 densities. To preserve a constant density, an exponential growth in
 the number of observations is required. 50 points in 1D, would
-require 2 500 points in 2D and 125 000 in 3D !</p></li>
+require 2 500 points in 2D and 125 000 in 3D!</p></li>
 <li><p>Another consequence of the sparse sampling in high dimensions is that
 all sample points are close to an edge of the sample. Consider
 <span class="math notranslate nohighlight">\(N\)</span> data points uniformly distributed in a
@@ -251,7 +251,7 @@ distance from the origin to the closest data point is given by the
 expression</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[d(P, N) = \left(1 - \frac{1}{2}^(1/N)\right)^{1/P}.\]</div>
+\[d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}.\]</div>
 <p>A more complicated expression exists for the mean distance to the
 closest point. For N = 500, P = 10 , <span class="math notranslate nohighlight">\(d(P, N ) \approx 0.52\)</span>, more
 than halfway to the boundary. Hence most data points are closer to the
@@ -488,7 +488,7 @@ of squares of residuals unexplained by the regression,
 <div class="math notranslate nohighlight">
 \[SS_\text{tot} = SS_\text{reg} + SS_\text{res}\]</div>
 <div class="figure align-default" id="id5">
-<img alt="title" src="../_images/Coefficient_of_Determination1.png" />
+<img alt="title" src="../_images/Coefficient_of_Determination.png" />
 <p class="caption"><span class="caption-text">title</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <p>The mean of <span class="math notranslate nohighlight">\(y\)</span> is</p>
