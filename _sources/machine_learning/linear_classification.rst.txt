@@ -1,5 +1,5 @@
-Linear classification
-=====================
+Linear models for classification problems
+=========================================
 
 .. figure:: images/linear_logistic.png
    :alt: Linear (logistic) classification
@@ -194,11 +194,18 @@ projections of the two means, i.e. as
 
 .. code:: ipython3
 
-    import matplotlib.pyplot as plt
-    import warnings
-    
-    warnings.filterwarnings('ignore')
     %matplotlib inline
+    
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    
+    from sklearn import datasets
+    import sklearn.linear_model as lm
+    import sklearn.metrics as metrics
+    
+    np.set_printoptions(precision=2)
+    pd.set_option('precision', 2)
 
 Linear discriminant analysis (LDA)
 ----------------------------------
@@ -265,10 +272,9 @@ How many parameters are required to estimate to perform a LDA ?
 
 .. code:: ipython3
 
-    import numpy as np
     from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
     
-    # Dataset
+    # Dataset 2 two multivariate normal
     n_samples, n_features = 100, 2
     mean0, mean1 = np.array([0, 0]), np.array([0, 2])
     Cov = np.array([[1, .8],[.8, 1]])
@@ -277,6 +283,7 @@ How many parameters are required to estimate to perform a LDA ?
     X1 = np.random.multivariate_normal(mean1, Cov, n_samples)
     X = np.vstack([X0, X1])
     y = np.array([0] * X0.shape[0] + [1] * X1.shape[0])
+    
     
     # LDA with scikit-learn
     lda = LDA()
@@ -339,8 +346,7 @@ be managed using a reweighting of the input samples.
 
 .. code:: ipython3
 
-    from sklearn import linear_model
-    logreg = linear_model.LogisticRegression(C=1e8, solver='lbfgs')
+    logreg = lm.LogisticRegression(penalty='none').fit(X, y)
     # This class implements regularized logistic regression.
     # C is the Inverse of regularization strength.
     # Large value => no regularization.
@@ -356,7 +362,7 @@ be managed using a reweighting of the input samples.
 .. parsed-literal::
 
     Nb errors=10, error rate=0.05
-    [[-5.1516729   5.57303883]]
+    [[-5.15  5.57]]
 
 
 Exercise
@@ -419,8 +425,8 @@ This is solved by numerical method using the gradient of the loss:
 See also `Scikit learn
 doc <https://scikit-learn.org/stable/modules/sgd.html#mathematical-formulation>`__
 
-Hinge loss or L1 loss
-~~~~~~~~~~~~~~~~~~~~~
+Hinge loss or :math:`\ell_1` loss
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TODO
 
@@ -441,8 +447,138 @@ of 3 points can be learned.
 
    In 2D we can shatter any three non-collinear points
 
-Ridge Fisher’s linear classification (L2-regularization)
---------------------------------------------------------
+Regularization using penalization of coefficients
+-------------------------------------------------
+
+The penalties use in regression are also used in classification. The
+only difference is the loss function generally the negative log
+likelihood (cross-entropy) or the hinge loss. We will explore:
+
+-  Ridge (also called :math:`\ell_2`) penalty:
+   :math:`\|\mathbf{w}\|_2^2`. It shrinks coefficients toward 0.
+-  Lasso (also called :math:`\ell_1`) penalty: :math:`\|\mathbf{w}\|_1`.
+   It performs feature selection by setting some coefficients to 0.
+-  ElasticNet (also called :math:`\ell_1\ell_2`) penalty:
+   :math:`\alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)`.
+   It performs selection of group of correlated features by setting some
+   coefficients to 0.
+
+.. code:: ipython3
+
+    # Dataset with some correlation
+    X, y = datasets.make_classification(n_samples=100, n_features=10,
+                                              n_informative=5, n_redundant=3,
+                                              n_classes=2, random_state=3, shuffle=False)
+    
+    lr = lm.LogisticRegression(penalty='none').fit(X, y)
+    
+    l2 = lm.LogisticRegression(penalty='l2', C=.1).fit(X, y)  # lambda = 1 / C!
+    
+    # use solver 'saga' to handle L1 penalty
+    l1 = lm.LogisticRegression(penalty='l1', C=.1, solver='saga').fit(X, y)  # lambda = 1 / C!
+    
+    l1l2 = lm.LogisticRegression(penalty='elasticnet',  C=.1, l1_ratio=0.5, solver='saga').fit(X, y)  # lambda = 1 / C!
+    
+    
+    pd.DataFrame(np.vstack((lr.coef_, l2.coef_, l1.coef_, l1l2.coef_)),
+                 index=['lr', 'l2', 'l1', 'l1l2'])
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+          <th>6</th>
+          <th>7</th>
+          <th>8</th>
+          <th>9</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>lr</th>
+          <td>4.37e-02</td>
+          <td>1.14</td>
+          <td>-0.28</td>
+          <td>0.57</td>
+          <td>0.55</td>
+          <td>-0.03</td>
+          <td>0.17</td>
+          <td>0.37</td>
+          <td>-0.42</td>
+          <td>0.39</td>
+        </tr>
+        <tr>
+          <th>l2</th>
+          <td>-4.87e-02</td>
+          <td>0.52</td>
+          <td>-0.21</td>
+          <td>0.34</td>
+          <td>0.26</td>
+          <td>-0.05</td>
+          <td>0.14</td>
+          <td>0.27</td>
+          <td>-0.25</td>
+          <td>0.21</td>
+        </tr>
+        <tr>
+          <th>l1</th>
+          <td>0.00e+00</td>
+          <td>0.31</td>
+          <td>0.00</td>
+          <td>0.10</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.26</td>
+          <td>0.00</td>
+          <td>0.00</td>
+        </tr>
+        <tr>
+          <th>l1l2</th>
+          <td>-7.08e-03</td>
+          <td>0.41</td>
+          <td>-0.15</td>
+          <td>0.29</td>
+          <td>0.12</td>
+          <td>0.00</td>
+          <td>0.00</td>
+          <td>0.20</td>
+          <td>-0.10</td>
+          <td>0.06</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+Ridge Fisher’s linear classification (:math:`\ell_2`-regularization)
+--------------------------------------------------------------------
 
 When the matrix :math:`\boldsymbol{S_W}` is not full rank or
 :math:`P \gg N`, the The Fisher most discriminant projection estimate of
@@ -474,8 +610,8 @@ Increasing :math:`\lambda` will:
 -  The covariance will converge toward the diagonal matrix, reducing the
    contribution of the pairwise covariances.
 
-Ridge logistic regression (L2-regularization)
----------------------------------------------
+Ridge logistic regression (:math:`\ell_2`-regularization)
+---------------------------------------------------------
 
 The **objective function** to be minimized is now the combination of the
 logistic loss (negative log likelyhood)
@@ -490,56 +626,45 @@ obtain:
 
 .. code:: ipython3
 
-    # Dataset
-    # Build a classification task using 3 informative features
-    from sklearn import datasets
-    
-    X, y = datasets.make_classification(n_samples=100,
-                               n_features=20,
-                               n_informative=3,
-                               n_redundant=0,
-                               n_repeated=0,
-                               n_classes=2,
-                               random_state=0,
-                               shuffle=False)
-
-.. code:: ipython3
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-    
     from sklearn import linear_model
-    lr = linear_model.LogisticRegression(C=1, solver='lbfgs')
+    lrl2 = linear_model.LogisticRegression(penalty='l2', C=.1)
     # This class implements regularized logistic regression. C is the Inverse of regularization strength.
     # Large value => no regularization.
     
-    lr.fit(X, y)
-    y_pred_lr = lr.predict(X)
+    lrl2.fit(X, y)
+    y_pred_l2 = lrl2.predict(X)
+    prob_pred_l2 = lrl2.predict_proba(X)
+    
+    print("Probas of 5 first samples for class 0 and class 1:")
+    print(prob_pred_l2[:5, :])
+    
+    print("Coef vector:")
+    print(lrl2.coef_)
     
     # Retrieve proba from coef vector
-    print(lr.coef_.shape)
-    probas = 1 / (1 + np.exp(- (np.dot(X, lr.coef_.T) + lr.intercept_))).ravel()
-    print("Diff", np.max(np.abs(lr.predict_proba(X)[:, 1] - probas)))
-    #plt.plot(lr.predict_proba(X)[:, 1], probas, "ob")
+    probas = 1 / (1 + np.exp(- (np.dot(X, lrl2.coef_.T) + lrl2.intercept_))).ravel()
+    print("Diff", np.max(np.abs(prob_pred_l2[:, 1] - probas)))
     
-    errors =  y_pred_lr != y
+    errors =  y_pred_l2 != y
     print("Nb errors=%i, error rate=%.2f" % (errors.sum(), errors.sum() / len(y)))
-    print(lr.coef_)
 
 
 .. parsed-literal::
 
-    (1, 20)
+    Probas of 5 first samples for class 0 and class 1:
+    [[0.89 0.11]
+     [0.72 0.28]
+     [0.73 0.27]
+     [0.75 0.25]
+     [0.48 0.52]]
+    Coef vector:
+    [[-0.05  0.52 -0.21  0.34  0.26 -0.05  0.14  0.27 -0.25  0.21]]
     Diff 0.0
-    Nb errors=26, error rate=0.26
-    [[-0.12899737  0.7579822  -0.01228473 -0.11412421  0.25491221  0.4329847
-       0.14564739  0.16763962  0.85071394  0.02116803 -0.1611039  -0.0146019
-      -0.03399884  0.43127728 -0.05831644 -0.0812323   0.15877844  0.29387389
-       0.54659524  0.03376169]]
+    Nb errors=24, error rate=0.24
 
 
-Lasso logistic regression (L1-regularization)
----------------------------------------------
+Lasso logistic regression (:math:`\ell_1`-regularization)
+---------------------------------------------------------
 
 The **objective function** to be minimized is now the combination of the
 logistic loss :math:`-\log \mathcal{L}(\boldsymbol{w})` with a penalty
@@ -554,7 +679,8 @@ of the L1 norm of the weights vector. In the two-class case, using the
 .. code:: ipython3
 
     from sklearn import linear_model
-    lrl1 = linear_model.LogisticRegression(penalty='l1', solver='saga')
+    lrl1 = lm.LogisticRegression(penalty='l1', C=.1, solver='saga') # lambda = 1 / C!
+    
     # This class implements regularized logistic regression. C is the Inverse of regularization strength.
     # Large value => no regularization.
     
@@ -563,20 +689,20 @@ of the L1 norm of the weights vector. In the two-class case, using the
     
     errors =  y_pred_lrl1 != y
     print("Nb errors=%i, error rate=%.2f" % (errors.sum(), errors.sum() / len(y_pred_lrl1)))
+    
+    print("Coef vector:")
     print(lrl1.coef_)
 
 
 .. parsed-literal::
 
-    Nb errors=25, error rate=0.25
-    [[-0.12618366  0.71711208  0.         -0.00530107  0.20418502  0.38240135
-       0.07003549  0.06296028  0.76841952  0.         -0.10625209  0.
-       0.          0.34010421  0.          0.          0.08038212  0.19202935
-       0.47988515  0.        ]]
+    Nb errors=27, error rate=0.27
+    Coef vector:
+    [[0.   0.31 0.   0.1  0.   0.   0.   0.26 0.   0.  ]]
 
 
-Ridge linear Support Vector Machine (L2-regularization)
--------------------------------------------------------
+Ridge linear Support Vector Machine (:math:`\ell_2`-regularization)
+-------------------------------------------------------------------
 
 Support Vector Machine seek for separating hyperplane with maximum
 margin to enforce robustness against noise. Like logistic regression it
@@ -638,27 +764,26 @@ predictions.
 
     from sklearn import svm
     
-    svmlin = svm.LinearSVC()
+    svmlin = svm.LinearSVC(C=.1)
     # Remark: by default LinearSVC uses squared_hinge as loss
     svmlin.fit(X, y)
     y_pred_svmlin = svmlin.predict(X)
     
     errors =  y_pred_svmlin != y
     print("Nb errors=%i, error rate=%.2f" % (errors.sum(), errors.sum() / len(y_pred_svmlin)))
+    print("Coef vector:")
     print(svmlin.coef_)
 
 
 .. parsed-literal::
 
-    Nb errors=26, error rate=0.26
-    [[-0.05612121  0.31189716  0.00272117 -0.05148767  0.09939817  0.17726852
-       0.06519342  0.08921434  0.35339727  0.0060124  -0.06201436 -0.00741298
-      -0.02157145  0.18271762 -0.02162947 -0.04060884  0.07204494  0.13083561
-       0.23721824  0.00824139]]
+    Nb errors=20, error rate=0.20
+    Coef vector:
+    [[-0.    0.32 -0.09  0.17  0.16 -0.01  0.06  0.13 -0.16  0.13]]
 
 
-Lasso linear Support Vector Machine (L1-regularization)
--------------------------------------------------------
+Lasso linear Support Vector Machine (:math:`\ell_1`-regularization)
+-------------------------------------------------------------------
 
 Linear SVM for classification (also called SVM-C or SVC) with
 l1-regularization
@@ -683,16 +808,15 @@ l1-regularization
     
     errors =  y_pred_svmlinl1 != y
     print("Nb errors=%i, error rate=%.2f" % (errors.sum(), errors.sum() / len(y_pred_svmlinl1)))
+    print("Coef vector:")
     print(svmlinl1.coef_)
 
 
 .. parsed-literal::
 
-    Nb errors=26, error rate=0.26
-    [[-0.05333926  0.29934673  0.         -0.03541846  0.09261443  0.1676322
-       0.05808032  0.07587832  0.34065463  0.         -0.05559105 -0.00194167
-      -0.01312533  0.16866547 -0.01450459 -0.02500777  0.06074154  0.11739131
-       0.22485568  0.00473276]]
+    Nb errors=20, error rate=0.20
+    Coef vector:
+    [[-0.01  0.37 -0.12  0.24  0.17  0.    0.    0.1  -0.16  0.13]]
 
 
 ## Exercise
@@ -713,8 +837,8 @@ counterparts, ie.: L2 LR vs L2 SVM and L1 LR vs L1 SVM
 -  Conclude on the differences between Linear SVM and logistic
    regression.
 
-Elastic-net classification (L2-L1-regularization)
--------------------------------------------------
+Elastic-net classification (:math:`\ell_1\ell_2`-regularization)
+----------------------------------------------------------------
 
 The **objective function** to be minimized is now the combination of the
 logistic loss :math:`\log L(\boldsymbol{w})` or the hinge loss with
@@ -730,51 +854,38 @@ coding we obtain:
 
 .. code:: ipython3
 
-    from sklearn import datasets
-    from sklearn import linear_model as lm
-    import matplotlib.pyplot as plt
+    # Use SGD solver
+    enetlog = lm.SGDClassifier(loss="log", penalty="elasticnet",
+                                alpha=0.1, l1_ratio=0.5, random_state=42)
+    enetlog.fit(X, y)
     
-    X, y = datasets.make_classification(n_samples=100,
-                               n_features=20,
-                               n_informative=3,
-                               n_redundant=0,
-                               n_repeated=0,
-                               n_classes=2,
-                               random_state=0,
-                               shuffle=False)
-    
-    enetloglike = lm.SGDClassifier(loss="log", penalty="elasticnet",
-                                alpha=0.0001, l1_ratio=0.15, class_weight='balanced')
-    enetloglike.fit(X, y)
+    # Or saga solver:
+    # enetloglike = lm.LogisticRegression(penalty='elasticnet',
+    #                                    C=.1, l1_ratio=0.5, solver='saga')
     
     enethinge = lm.SGDClassifier(loss="hinge", penalty="elasticnet",
-                                alpha=0.0001, l1_ratio=0.15,  class_weight='balanced')
+                                alpha=0.1, l1_ratio=0.5, random_state=42)
     enethinge.fit(X, y)
-
-
+    
+    print("Hinge loss and logistic loss provide almost the same predictions.")
+    print("Confusion matrix")
+    metrics.confusion_matrix(enetlog.predict(X), enethinge.predict(X))
+    
+    print("Decision_function log x hinge losses:")
+    _ = plt.plot(enetlog.decision_function(X),
+                 enethinge.decision_function(X), "o")
 
 
 .. parsed-literal::
 
-    SGDClassifier(class_weight='balanced', penalty='elasticnet')
+    Hinge loss and logistic loss provide almost the same predictions.
+    Confusion matrix
+    Decision_function log x hinge losses:
 
 
 
-Exercise
-~~~~~~~~
+.. image:: linear_classification_files/linear_classification_25_1.png
 
-Compare predictions of Elastic-net Logistic regression (LR) and
-Hinge-loss Elastic-net
-
--  Compute the correlation between pairs of weights vectors.
-
--  Compare the predictions of two classifiers using their decision
-   function:
-
-   -  Compute the correlation decision function.
-   -  Plot the pairwise decision function of the classifiers.
-
--  Conclude on the differences between the two losses.
 
 Classification performance evaluation metrics
 ---------------------------------------------
@@ -899,30 +1010,30 @@ see:https://en.wikipedia.org/wiki/Receiver_operating_characteristic.
 
 .. code:: ipython3
 
-    from sklearn import metrics
     score_pred = np.array([.1 ,.2, .3, .4, .5, .6, .7, .8])
     y_true = np.array([0, 0, 0, 0, 1, 1, 1, 1])
     thres = .9
     y_pred = (score_pred > thres).astype(int)
     
-    print("Predictions:", y_pred)
+    print("With a threshold of %.2f, the rule always predict 0. Predictions:" % thres)
+    print(y_pred)
     metrics.accuracy_score(y_true, y_pred)
     
     # The overall precision an recall on each individual class
-    p, r, f, s = metrics.precision_recall_fscore_support(y_true, y_pred)
-    print("Recalls:", r)
-    # 100% of specificity, 0% of sensitivity
+    r = metrics.recall_score(y_true, y_pred, average=None)
+    print("Recalls on individual classes are:", r, "ie, 100% of specificity, 0% of sensitivity")
     
     # However AUC=1 indicating a perfect separation of the two classes
     auc = metrics.roc_auc_score(y_true, score_pred)
-    print("AUC:", auc)
+    print("But the AUC of %.2f demonstrate a good classes separation." % auc)
 
 
 .. parsed-literal::
 
-    Predictions: [0 0 0 0 0 0 0 0]
-    Recalls: [1. 0.]
-    AUC: 1.0
+    With a threshold of 0.90, the rule always predict 0. Predictions:
+    [0 0 0 0 0 0 0 0]
+    Recalls on individual classes are: [1. 0.] ie, 100% of specificity, 0% of sensitivity
+    But the AUC of 1.00 demonstrate a good classes separation.
 
 
 Imbalanced classes
@@ -969,12 +1080,6 @@ inversely proportional to class frequencies in the input data as
 
 .. code:: ipython3
 
-    import numpy as np
-    from sklearn import linear_model
-    from sklearn import datasets
-    from sklearn import metrics
-    import matplotlib.pyplot as plt
-    
     # dataset
     X, y = datasets.make_classification(n_samples=500,
                                n_features=5,

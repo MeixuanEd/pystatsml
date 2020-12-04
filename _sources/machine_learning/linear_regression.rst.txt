@@ -1,5 +1,5 @@
-Linear methods for regression
-=============================
+Linear models for regression problems
+=====================================
 
 .. figure:: images/linear_regression.png
    :alt: Linear regression
@@ -70,59 +70,27 @@ follow the same application programming interface (API), namely:
 .. code:: ipython3
 
     %matplotlib inline
-    #import warnings
-    #warnings.filterwarnings(action='once')
-
-.. code:: ipython3
-
-    from mpl_toolkits.mplot3d import Axes3D
-    import matplotlib.pyplot as plt
+    
     import numpy as np
     import pandas as pd
+    import matplotlib.pyplot as plt
+    
+    from sklearn import datasets
     import sklearn.linear_model as lm
     import sklearn.metrics as metrics
-    %matplotlib inline
     
-    # Fit Ordinary Least Squares: OLS
-    csv = pd.read_csv('https://github.com/duchesnay/pystatsml/raw/master/datasets/Advertising.csv', index_col=0)
-    X = csv[['TV', 'Radio']]
-    y = csv['Sales']
-    
-    lr = lm.LinearRegression().fit(X, y)
-    y_pred = lr.predict(X)
-    print("R-squared =", metrics.r2_score(y, y_pred))
-    
-    print("Coefficients =", lr.coef_)
-    
-    # Plot
-    fig = plt.figure(figsize=(6, 6))
-    #fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    
-    ax.scatter(csv['TV'], csv['Radio'], csv['Sales'], c='r', marker='o')
-    
-    xx1, xx2 = np.meshgrid(
-        np.linspace(csv['TV'].min(), csv['TV'].max(), num=10),
-        np.linspace(csv['Radio'].min(), csv['Radio'].max(), num=10))
-    
-    XX = np.column_stack([xx1.ravel(), xx2.ravel()])
-    
-    yy = lr.predict(XX)
-    ax.plot_wireframe(xx1, xx2, yy.reshape(xx1.shape))
-    ax.set_xlabel('TV')
-    ax.set_ylabel('Radio')
-    _ = ax.set_zlabel('Sales')
+    np.set_printoptions(precision=2)
+    pd.set_option('precision', 2)
 
+Linear regression of ``Advertising.csv`` dataset with TV and Radio
+advertising as input features and Sales as target. The linear model that
+minimizes the MSE is a plan (2 input features) defined as: Sales = 0.05
+TV + .19 Radio + 3:
 
-.. parsed-literal::
+.. figure:: images/linear_regression_plan.png
+   :alt: Linear regression
 
-    R-squared = 0.8971942610828956
-    Coefficients = [0.  0.2]
-
-
-
-.. image:: linear_regression_files/linear_regression_3_1.png
-
+   Linear regression
 
 Overfitting
 -----------
@@ -180,10 +148,6 @@ with very large coefficients will produce excessively large predictions.
 
 .. code:: ipython3
 
-    import numpy as np
-    from mpl_toolkits.mplot3d import Axes3D
-    import matplotlib.pyplot as plt
-    
     bv = np.array([10, 20, 30, 40, 50])             # business volume
     tax  = .2 * bv                                  # Tax
     bp = .1 * bv + np.array([-.1, .2, .1, -.2, .1]) # business potential
@@ -195,15 +159,25 @@ with very large coefficients will produce excessively large predictions.
     Since tax and bv are correlated, there is an infinite number of linear combinations
     leading to the same prediction.
     '''
-     
+    
     # 10 times the bv then subtract it 9 times using the tax variable: 
     beta_medium = np.array([.1 * 10, -.1 * 9 * (1/.2)])
     # 100 times the bv then subtract it 99 times using the tax variable: 
     beta_large = np.array([.1 * 100, -.1 * 99 * (1/.2)])
     
-    # Check that all model lead to the same result
+    print("L2 norm of coefficients: small:%.2f, medium:%.2f, large:%.2f." % 
+          (np.sum(beta_star ** 2), np.sum(beta_medium ** 2), np.sum(beta_large ** 2)))
+    
+    print("However all models provide the exact same predictions.")
     assert np.all(np.dot(X, beta_star) == np.dot(X, beta_medium))
     assert np.all(np.dot(X, beta_star) == np.dot(X, beta_large))
+
+
+.. parsed-literal::
+
+    L2 norm of coefficients: small:0.01, medium:21.25, large:2550.25.
+    However all models provide the exact same predictions.
+
 
 Multicollinearity between the predictors: business volumes and tax
 produces unstable models with arbitrary large coefficients.
@@ -263,12 +237,8 @@ algorithm is based on the relative size of :math:`P` and :math:`N`.
    :math:`P`-dimensional unit ball centered at the origin. Suppose we
    consider a nearest-neighbor estimate at the origin. The median
    distance from the origin to the closest data point is given by the
-   expression
-
-.. math::
-
-
-   d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}.
+   expression:
+   :math:`d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}.`
 
 A more complicated expression exists for the mean distance to the
 closest point. For N = 500, P = 10 , :math:`d(P, N ) \approx 0.52`, more
@@ -276,18 +246,18 @@ than halfway to the boundary. Hence most data points are closer to the
 boundary of the sample space than to any other data point. The reason
 that this presents a problem is that prediction is much more difficult
 near the edges of the training sample. One must extrapolate from
-neighboring sample points rather than interpolate between them. (Source:
-T Hastie, R Tibshirani, J Friedman. *The Elements of Statistical
-Learning: Data Mining, Inference, and Prediction.* Second Edition,
-2009.)
+neighboring sample points rather than interpolate between them.
+*(Source: T Hastie, R Tibshirani, J Friedman.*\ The Elements of
+Statistical Learning: Data Mining, Inference, and Prediction.\* Second
+Edition, 2009.)\*
 
 -  Structural risk minimization provides a theoretical background of
    this phenomenon. (See VC dimension.)
 
 -  See also bias–variance trade-off.
 
-Regularization using penalization of coeffients
------------------------------------------------
+Regularization using penalization of coefficients
+-------------------------------------------------
 
 Regarding linear models, overfitting generally leads to excessively
 complex solutions (coefficient vectors), accounting for noise or
@@ -304,17 +274,37 @@ for goodness-of-fit and a penalty term :math:`\Omega(\mathbf{w})`
 respective contribution of the loss and the penalty terms is controlled
 by the regularization parameter :math:`\lambda`.
 
-Therefore the **loss function** :math:`L(\mathbf{w})` (generally the
-SSE) is combined with a **penalty function** :math:`\Omega(\mathbf{w})`
-leading to the general form:
+Therefore the **loss function** :math:`L(\mathbf{w})` is combined with a
+**penalty function** :math:`\Omega(\mathbf{w})` leading to the general
+form:
 
 .. math::
 
 
-   J(\mathbf{w}) = L(\mathbf{w}) + \lambda \Omega(\mathbf{w})
+   J(\mathbf{w}) = L(\mathbf{w}) + \lambda \Omega(\mathbf{w}).
 
 The respective contribution of the loss and the penalty is controlled by
 the **regularization parameter** :math:`\lambda`.
+
+For regression problems the loss is the SSE given by:
+
+.. raw:: latex
+
+   \begin{align*}
+   L(\mathbf{w}) = SSE(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2\\
+   &= \|\mathbf{y} - \mathbf{x}\mathbf{w}\|_2^2
+   \end{align*}
+
+Popular penalties are:
+
+-  Ridge (also called :math:`\ell_2`) penalty:
+   :math:`\|\mathbf{w}\|_2^2`. It shrinks coefficients toward 0.
+-  Lasso (also called :math:`\ell_1`) penalty: :math:`\|\mathbf{w}\|_1`.
+   It performs feature selection by setting some coefficients to 0.
+-  ElasticNet (also called :math:`\ell_1\ell_2`) penalty:
+   :math:`\alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)`.
+   It performs selection of group of correlated features by setting some
+   coefficients to 0.
 
 The next figure shows the predicted performance (r-squared) on train and
 test sets with an increasing number of input features. The number of
@@ -324,10 +314,8 @@ number of input features. The performances on the training set rapidly
 reach 100% (R2=1). However, the performance on the test set decreases
 with the increase of the input dimensionality. The difference between
 the train and test performances (blue shaded region) depicts the
-overfitting phenomena. Regularisation using penalties of the norm
-(:math:`\ell_2` a.k.a. Ridge, :math:`\ell_1` a.k.a. Lasso,
-:math:`\ell_2, \ell_1` a.k.a. ElasticNet) of the coefficient vector
-greatly limits the overfitting phenomena.
+overfitting phenomena. Regularisation using penalties of the coefficient
+vector norm greatly limits the overfitting phenomena.
 
 .. figure:: images/linear_regression_penalties.png
    :alt: Multicollinearity between the predictors
@@ -338,10 +326,6 @@ With scikit-learn:
 
 .. code:: ipython3
 
-    from sklearn import datasets
-    import  sklearn.linear_model as lm
-    np.set_printoptions(precision=1)
-    
     # Dataset with some correlation
     X, y, coef = datasets.make_regression(n_samples=100, n_features=10, n_informative=5, random_state=0,
                                           effective_rank=3, coef=True)
@@ -354,18 +338,114 @@ With scikit-learn:
     
     l1l2 = lm.ElasticNet(alpha=.1, l1_ratio=.9).fit(X, y)
     
-    print("True :", coef)
-    print("Ridge:", l2.coef_)
-    print("Lasso:", l1.coef_)
-    print("Enet :", l1l2.coef_)
+    pd.DataFrame(np.vstack((coef, lr.coef_, l2.coef_, l1.coef_, l1l2.coef_)),
+                 index=['True', 'lr', 'l2', 'l1', 'l1l2'])
 
 
-.. parsed-literal::
 
-    True : [28.5  0.  13.2  0.  49.  70.4 39.7  0.   0.   0. ]
-    Ridge: [ 1.   0.2  0.9 -0.3  1.8  1.6  2.1 -1.1 -0.8 -1. ]
-    Lasso: [ 0.  -0.   0.  -0.  24.4 25.2 25.4 -0.  -0.  -0. ]
-    Enet : [ 0.8  0.   0.5 -0.   7.2  5.7  8.9 -1.4 -0.  -0.4]
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+          <th>6</th>
+          <th>7</th>
+          <th>8</th>
+          <th>9</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>True</th>
+          <td>28.49</td>
+          <td>0.00e+00</td>
+          <td>13.17</td>
+          <td>0.00e+00</td>
+          <td>48.97</td>
+          <td>70.44</td>
+          <td>39.70</td>
+          <td>0.00e+00</td>
+          <td>0.00e+00</td>
+          <td>0.00e+00</td>
+        </tr>
+        <tr>
+          <th>lr</th>
+          <td>28.49</td>
+          <td>3.18e-14</td>
+          <td>13.17</td>
+          <td>-3.05e-14</td>
+          <td>48.97</td>
+          <td>70.44</td>
+          <td>39.70</td>
+          <td>-2.48e-14</td>
+          <td>4.94e-14</td>
+          <td>-2.63e-14</td>
+        </tr>
+        <tr>
+          <th>l2</th>
+          <td>1.03</td>
+          <td>2.11e-01</td>
+          <td>0.93</td>
+          <td>-3.16e-01</td>
+          <td>1.82</td>
+          <td>1.57</td>
+          <td>2.10</td>
+          <td>-1.14e+00</td>
+          <td>-8.39e-01</td>
+          <td>-1.02e+00</td>
+        </tr>
+        <tr>
+          <th>l1</th>
+          <td>0.00</td>
+          <td>-0.00e+00</td>
+          <td>0.00</td>
+          <td>-0.00e+00</td>
+          <td>24.40</td>
+          <td>25.16</td>
+          <td>25.36</td>
+          <td>-0.00e+00</td>
+          <td>-0.00e+00</td>
+          <td>-0.00e+00</td>
+        </tr>
+        <tr>
+          <th>l1l2</th>
+          <td>0.78</td>
+          <td>0.00e+00</td>
+          <td>0.51</td>
+          <td>-0.00e+00</td>
+          <td>7.20</td>
+          <td>5.71</td>
+          <td>8.95</td>
+          <td>-1.38e+00</td>
+          <td>-0.00e+00</td>
+          <td>-4.01e-01</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
 
 
 Ridge regression (:math:`\ell_2`-regularization)
@@ -519,7 +599,7 @@ the data.
 
    :math:`\ell_1` and :math:`\ell_2` shrinkages
 
-Elastic-net regression (:math:`\ell_2`-:math:`\ell_1`-regularization)
+Elastic-net regression (:math:`\ell_1`-:math:`\ell_2`-regularization)
 ---------------------------------------------------------------------
 
 The Elastic-net estimator combines the :math:`\ell_1` and :math:`\ell_2`

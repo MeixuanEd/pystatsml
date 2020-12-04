@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Time Series in python &#8212; Statistics and Machine Learning in Python 0.4 beta documentation</title>
+    <title>Time series in python &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -36,7 +36,7 @@
           <div class="body" role="main">
             
   <div class="section" id="time-series-in-python">
-<h1>Time Series in python<a class="headerlink" href="#time-series-in-python" title="Permalink to this headline">¶</a></h1>
+<h1>Time series in python<a class="headerlink" href="#time-series-in-python" title="Permalink to this headline">¶</a></h1>
 <p>Two libraries:</p>
 <ul class="simple">
 <li><p>Pandas: <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html">https://pandas.pydata.org/pandas-docs/stable/timeseries.html</a></p></li>
@@ -62,15 +62,20 @@ increment or festivals.</p></li>
 </ol>
 </div>
 <div class="section" id="pandas-time-series-data-structure">
-<h2>Pandas Time Series Data Structure<a class="headerlink" href="#pandas-time-series-data-structure" title="Permalink to this headline">¶</a></h2>
+<h2>Pandas time series data structure<a class="headerlink" href="#pandas-time-series-data-structure" title="Permalink to this headline">¶</a></h2>
 <p>A Series is similar to a list or an array in Python. It represents a
 series of values (numeric or otherwise) such as a column of data. It
 provides additional functionality, methods, and operators, which make it
 a more powerful version of a list.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 
-<span class="c1"># Create a Series from a list</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Series from a list</span>
 <span class="n">ser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
 
@@ -101,7 +106,7 @@ a more powerful version of a list.</p>
 </div>
 </div>
 <div class="section" id="time-series-analysis-of-google-trends">
-<h2>Time Series Analysis of Google Trends<a class="headerlink" href="#time-series-analysis-of-google-trends" title="Permalink to this headline">¶</a></h2>
+<h2>Time series analysis of Google trends<a class="headerlink" href="#time-series-analysis-of-google-trends" title="Permalink to this headline">¶</a></h2>
 <p>source:
 <a class="reference external" href="https://www.datacamp.com/community/tutorials/time-series-analysis-tutorial">https://www.datacamp.com/community/tutorials/time-series-analysis-tutorial</a></p>
 <p>Get Google Trends data of keywords such as ‘diet’ and ‘gym’ and see how
@@ -123,18 +128,7 @@ you are going to do the following:</p>
 </div>
 <div class="section" id="read-data">
 <h2>Read data<a class="headerlink" href="#read-data" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="c1"># Plot appears on its own windows</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="c1"># Tools / Preferences / Ipython Console  / Graphics  / Graphics Backend / Backend: “automatic”</span>
-<span class="c1"># Interactive Matplotlib Jupyter Notebook</span>
-<span class="c1"># %matplotlib inline</span>
-
-<span class="k">try</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/datacamp/datacamp_facebook_live_ny_resolution/master/datasets/multiTimeline.csv&quot;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="k">except</span><span class="p">:</span>
@@ -197,7 +191,7 @@ original index and set it to the ‘month’ column.</p>
 </div>
 </div>
 <div class="section" id="exploratory-data-analysis">
-<h2>Exploratory Data Analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this headline">¶</a></h2>
+<h2>Exploratory data analysis<a class="headerlink" href="#exploratory-data-analysis" title="Permalink to this headline">¶</a></h2>
 <p>You can use a built-in pandas visualization method .plot() to plot your
 data as 3 line plots on a single figure (one for each column, namely,
 ‘diet’, ‘gym’, and ‘finance’).</p>
@@ -212,10 +206,7 @@ data as 3 line plots on a single figure (one for each column, namely,
 <span class="c1"># plt.xlabel(&#39;Year&#39;, fontsize=20);</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="../_images/time_series_7_1.png" src="../_images/time_series_7_1.png" />
+<img alt="../_images/time_series_8_0.png" src="../_images/time_series_8_0.png" />
 <p>Note that this data is relative. As you can read on Google trends:</p>
 <p>Numbers represent search interest relative to the highest point on the
 chart for the given region and time. A value of 100 is the peak
@@ -224,7 +215,7 @@ popular. Likewise a score of 0 means the term was less than 1% as
 popular as the peak.</p>
 </div>
 <div class="section" id="resampling-smoothing-windowing-rolling-average-trends">
-<h2>Resampling, Smoothing, Windowing, Rolling average: Trends<a class="headerlink" href="#resampling-smoothing-windowing-rolling-average-trends" title="Permalink to this headline">¶</a></h2>
+<h2>Resampling, smoothing, windowing, rolling average: trends<a class="headerlink" href="#resampling-smoothing-windowing-rolling-average-trends" title="Permalink to this headline">¶</a></h2>
 <p>Rolling average, for each time point, take the average of the points on
 either side of it. Note that the number of points is specified by a
 window size.</p>
@@ -242,10 +233,10 @@ window size.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7f2a045af0d0</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7f670db34a10</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_9_1.png" src="../_images/time_series_9_1.png" />
+<img alt="../_images/time_series_10_1.png" src="../_images/time_series_10_1.png" />
 <p>Rolling average (smoothing) with Numpy</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;diet&#39;</span><span class="p">]])</span>
 <span class="n">win</span> <span class="o">=</span> <span class="mi">12</span>
@@ -256,10 +247,10 @@ window size.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">diet_smooth</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f2a0021ee90</span><span class="o">&gt;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f670cbbb1d0</span><span class="o">&gt;</span><span class="p">]</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_11_1.png" src="../_images/time_series_11_1.png" />
+<img alt="../_images/time_series_12_1.png" src="../_images/time_series_12_1.png" />
 <p>Trends Plot Diet and Gym</p>
 <p>Build a new DataFrame which is the concatenation diet and gym smoothed
 data</p>
@@ -273,7 +264,7 @@ data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_13_1.png" src="../_images/time_series_13_1.png" />
+<img alt="../_images/time_series_14_1.png" src="../_images/time_series_14_1.png" />
 <p>Detrending</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_dtrend</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;diet&quot;</span><span class="p">,</span> <span class="s2">&quot;gym&quot;</span><span class="p">]]</span> <span class="o">-</span> <span class="n">df_avg</span>
 <span class="n">df_dtrend</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
@@ -283,10 +274,10 @@ data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_15_1.png" src="../_images/time_series_15_1.png" />
+<img alt="../_images/time_series_16_1.png" src="../_images/time_series_16_1.png" />
 </div>
 <div class="section" id="first-order-differencing-seasonal-patterns">
-<h2>First-order differencing: Seasonal Patterns<a class="headerlink" href="#first-order-differencing-seasonal-patterns" title="Permalink to this headline">¶</a></h2>
+<h2>First-order differencing: seasonal patterns<a class="headerlink" href="#first-order-differencing-seasonal-patterns" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># diff = original - shiftted data</span>
 <span class="c1"># (exclude first term for some implementation details)</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">((</span><span class="n">diet</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span> <span class="o">==</span> <span class="n">diet</span> <span class="o">-</span> <span class="n">diet</span><span class="o">.</span><span class="n">shift</span><span class="p">())[</span><span class="mi">1</span><span class="p">:])</span>
@@ -298,10 +289,10 @@ data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_17_1.png" src="../_images/time_series_17_1.png" />
+<img alt="../_images/time_series_18_1.png" src="../_images/time_series_18_1.png" />
 </div>
 <div class="section" id="periodicity-and-correlation">
-<h2>Periodicity and Correlation<a class="headerlink" href="#periodicity-and-correlation" title="Permalink to this headline">¶</a></h2>
+<h2>Periodicity and correlation<a class="headerlink" href="#periodicity-and-correlation" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">);</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
@@ -313,15 +304,17 @@ data</p>
 <span class="n">finance</span> <span class="o">-</span><span class="mf">0.034639</span> <span class="o">-</span><span class="mf">0.284279</span>  <span class="mf">1.000000</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_19_1.png" src="../_images/time_series_19_1.png" />
+<img alt="../_images/time_series_20_1.png" src="../_images/time_series_20_1.png" />
 <p>Plot correlation matrix</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">AxesSubplot</span><span class="p">:</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="n">diet</span>       <span class="n">gym</span>   <span class="n">finance</span>
+<span class="n">diet</span>     <span class="mf">1.000000</span> <span class="o">-</span><span class="mf">0.100764</span> <span class="o">-</span><span class="mf">0.034639</span>
+<span class="n">gym</span>     <span class="o">-</span><span class="mf">0.100764</span>  <span class="mf">1.000000</span> <span class="o">-</span><span class="mf">0.284279</span>
+<span class="n">finance</span> <span class="o">-</span><span class="mf">0.034639</span> <span class="o">-</span><span class="mf">0.284279</span>  <span class="mf">1.000000</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_21_1.png" src="../_images/time_series_21_1.png" />
 <p>‘diet’ and ‘gym’ are negatively correlated! Remember that you have a
 seasonal and a trend component. From the correlation coefficient, ‘diet’
 and ‘gym’ are negatively correlated:</p>
@@ -344,15 +337,17 @@ these time series</p>
 <span class="n">finance</span>  <span class="mf">0.373828</span>  <span class="mf">0.301111</span>  <span class="mf">1.000000</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_23_1.png" src="../_images/time_series_23_1.png" />
+<img alt="../_images/time_series_24_1.png" src="../_images/time_series_24_1.png" />
 <p>Plot correlation matrix</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">AxesSubplot</span><span class="p">:</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="n">diet</span>       <span class="n">gym</span>   <span class="n">finance</span>
+<span class="n">diet</span>     <span class="mf">1.000000</span>  <span class="mf">0.758707</span>  <span class="mf">0.373828</span>
+<span class="n">gym</span>      <span class="mf">0.758707</span>  <span class="mf">1.000000</span>  <span class="mf">0.301111</span>
+<span class="n">finance</span>  <span class="mf">0.373828</span>  <span class="mf">0.301111</span>  <span class="mf">1.000000</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_25_1.png" src="../_images/time_series_25_1.png" />
 <p>Decomposing time serie in trend, seasonality and residuals</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.seasonal</span> <span class="kn">import</span> <span class="n">seasonal_decompose</span>
 
@@ -379,7 +374,7 @@ these time series</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_27_0.png" src="../_images/time_series_27_0.png" />
+<img alt="../_images/time_series_28_0.png" src="../_images/time_series_28_0.png" />
 </div>
 <div class="section" id="autocorrelation">
 <h2>Autocorrelation<a class="headerlink" href="#autocorrelation" title="Permalink to this headline">¶</a></h2>
@@ -399,29 +394,25 @@ t1…t2 with series at instant t1-5…t2-5 (t1-5 and t2 being end points).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">AxesSubplot</span><span class="p">:</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Lag&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Autocorrelation&#39;</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_29_1.png" src="../_images/time_series_29_1.png" />
+<img alt="../_images/time_series_30_1.png" src="../_images/time_series_30_1.png" />
 <p>Compute Autocorrelation Function (ACF)</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">acf</span>
 
 <span class="n">x_diff</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="c1"># first item is NA</span>
-<span class="n">lag_acf</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">36</span><span class="p">)</span>
+<span class="n">lag_acf</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lag_acf</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Autocorrelation Function&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">tsa</span><span class="o">/</span><span class="n">stattools</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">666</span><span class="p">:</span> <span class="ne">FutureWarning</span><span class="p">:</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span> <span class="n">will</span> <span class="n">become</span> <span class="n">the</span> <span class="n">default</span> <span class="n">after</span> <span class="n">the</span> <span class="n">release</span> <span class="n">of</span> <span class="n">the</span> <span class="mf">0.12</span> <span class="n">release</span> <span class="n">of</span> <span class="n">statsmodels</span><span class="o">.</span> <span class="n">To</span> <span class="n">suppress</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">explicitly</span> <span class="nb">set</span> <span class="n">fft</span><span class="o">=</span><span class="kc">False</span><span class="o">.</span>
-  <span class="ne">FutureWarning</span><span class="p">,</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Autocorrelation Function&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_31_2.png" src="../_images/time_series_31_2.png" />
+<img alt="../_images/time_series_32_1.png" src="../_images/time_series_32_1.png" />
 <p>ACF peaks every 12 months: Time series is correlated with itself shifted
 by 12 months.</p>
 </div>
 <div class="section" id="time-series-forecasting-with-python-using-autoregressive-moving-average-arma-models">
-<h2>Time Series Forecasting with Python using Autoregressive Moving Average (ARMA) models<a class="headerlink" href="#time-series-forecasting-with-python-using-autoregressive-moving-average-arma-models" title="Permalink to this headline">¶</a></h2>
+<h2>Time series forecasting with Python using Autoregressive Moving Average (ARMA) models<a class="headerlink" href="#time-series-forecasting-with-python-using-autoregressive-moving-average-arma-models" title="Permalink to this headline">¶</a></h2>
 <p>Source:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.packtpub.com/mapt/book/big_data_and_business_intelligence/9781783553358/7/ch07lvl1sec77/arma-models">https://www.packtpub.com/mapt/book/big_data_and_business_intelligence/9781783553358/7/ch07lvl1sec77/arma-models</a></p></li>
@@ -454,7 +445,7 @@ explained by lags 1 to 4.</p>
 <span class="n">x_diff</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> <span class="c1"># first item is NA</span>
 <span class="c1"># ACF and PACF plots:</span>
 
-<span class="n">lag_acf</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">lag_acf</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">lag_pacf</span> <span class="o">=</span> <span class="n">pacf</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ols&#39;</span><span class="p">)</span>
 
 <span class="c1">#Plot ACF:</span>
@@ -475,11 +466,7 @@ explained by lags 1 to 4.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">tsa</span><span class="o">/</span><span class="n">stattools</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">666</span><span class="p">:</span> <span class="ne">FutureWarning</span><span class="p">:</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span> <span class="n">will</span> <span class="n">become</span> <span class="n">the</span> <span class="n">default</span> <span class="n">after</span> <span class="n">the</span> <span class="n">release</span> <span class="n">of</span> <span class="n">the</span> <span class="mf">0.12</span> <span class="n">release</span> <span class="n">of</span> <span class="n">statsmodels</span><span class="o">.</span> <span class="n">To</span> <span class="n">suppress</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">explicitly</span> <span class="nb">set</span> <span class="n">fft</span><span class="o">=</span><span class="kc">False</span><span class="o">.</span>
-  <span class="ne">FutureWarning</span><span class="p">,</span>
-</pre></div>
-</div>
-<img alt="../_images/time_series_33_1.png" src="../_images/time_series_33_1.png" />
+<img alt="../_images/time_series_34_0.png" src="../_images/time_series_34_0.png" />
 <p>In this plot, the two dotted lines on either sides of 0 are the
 confidence interevals. These can be used to determine the p and q values
 as:</p>
@@ -501,6 +488,7 @@ function.</p></li>
 specifying the index of the time or times to be predicted.</p></li>
 </ol>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.tsa.arima_model</span> <span class="kn">import</span> <span class="n">ARMA</span>
+<span class="c1"># from statsmodels.tsa.arima.model import ARIMA</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">ARMA</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span> <span class="c1"># fit model</span>
 
@@ -538,8 +526,8 @@ specifying the index of the time or times to be predicted.</p></li>
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                    <span class="n">gym</span>   <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">168</span>
 <span class="n">Model</span><span class="p">:</span>                     <span class="n">ARMA</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="n">Log</span> <span class="n">Likelihood</span>                <span class="o">-</span><span class="mf">436.852</span>
 <span class="n">Method</span><span class="p">:</span>                       <span class="n">css</span><span class="o">-</span><span class="n">mle</span>   <span class="n">S</span><span class="o">.</span><span class="n">D</span><span class="o">.</span> <span class="n">of</span> <span class="n">innovations</span>              <span class="mf">3.229</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Mon</span><span class="p">,</span> <span class="mi">12</span> <span class="n">Oct</span> <span class="mi">2020</span>   <span class="n">AIC</span>                            <span class="mf">881.704</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">00</span><span class="p">:</span><span class="mi">54</span><span class="p">:</span><span class="mi">34</span>   <span class="n">BIC</span>                            <span class="mf">894.200</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Fri</span><span class="p">,</span> <span class="mi">04</span> <span class="n">Dec</span> <span class="mi">2020</span>   <span class="n">AIC</span>                            <span class="mf">881.704</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">13</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">20</span>   <span class="n">BIC</span>                            <span class="mf">894.200</span>
 <span class="n">Sample</span><span class="p">:</span>                    <span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2004</span>   <span class="n">HQIC</span>                           <span class="mf">886.776</span>
                          <span class="o">-</span> <span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2017</span>
 <span class="o">==============================================================================</span>
@@ -560,7 +548,7 @@ specifying the index of the time or times to be predicted.</p></li>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;RSS: 1794.4653&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/time_series_35_3.png" src="../_images/time_series_35_3.png" />
+<img alt="../_images/time_series_36_3.png" src="../_images/time_series_36_3.png" />
 </div>
 </div>
 </div>
@@ -607,24 +595,24 @@ specifying the index of the time or times to be predicted.</p></li>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">data visualization: Matplotlib &amp; Seaborn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stat_multiv.html">Multivariate statistics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Time Series in python</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Time series in python</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#stationarity">Stationarity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pandas-time-series-data-structure">Pandas Time Series Data Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#time-series-analysis-of-google-trends">Time Series Analysis of Google Trends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pandas-time-series-data-structure">Pandas time series data structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-series-analysis-of-google-trends">Time series analysis of Google trends</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#read-data">Read data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#recode-data">Recode data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#exploratory-data-analysis">Exploratory Data Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#resampling-smoothing-windowing-rolling-average-trends">Resampling, Smoothing, Windowing, Rolling average: Trends</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#first-order-differencing-seasonal-patterns">First-order differencing: Seasonal Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#periodicity-and-correlation">Periodicity and Correlation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exploratory-data-analysis">Exploratory data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resampling-smoothing-windowing-rolling-average-trends">Resampling, smoothing, windowing, rolling average: trends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#first-order-differencing-seasonal-patterns">First-order differencing: seasonal patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#periodicity-and-correlation">Periodicity and correlation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#autocorrelation">Autocorrelation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#time-series-forecasting-with-python-using-autoregressive-moving-average-arma-models">Time Series Forecasting with Python using Autoregressive Moving Average (ARMA) models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-series-forecasting-with-python-using-autoregressive-moving-average-arma-models">Time series forecasting with Python using Autoregressive Moving Average (ARMA) models</a></li>
 </ul>
 </li>
 </ul>
@@ -632,10 +620,10 @@ specifying the index of the time or times to be predicted.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear methods for regression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/non_linear_prediction.html">Non linear learning algorithms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/resampling.html">Resampling Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/non_linear_prediction.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/resampling.html">Resampling methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>

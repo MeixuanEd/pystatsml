@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Non linear learning algorithms &#8212; Statistics and Machine Learning in Python 0.4 beta documentation</title>
+    <title>Non-linear models &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -17,8 +17,8 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Resampling Methods" href="resampling.html" />
-    <link rel="prev" title="Linear classification" href="linear_classification.html" />
+    <link rel="next" title="Resampling methods" href="resampling.html" />
+    <link rel="prev" title="Linear models for classification problems" href="linear_classification.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -35,8 +35,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="non-linear-learning-algorithms">
-<h1>Non linear learning algorithms<a class="headerlink" href="#non-linear-learning-algorithms" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="non-linear-models">
+<h1>Non-linear models<a class="headerlink" href="#non-linear-models" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="support-vector-machines-svm">
 <h2>Support Vector Machines (SVM)<a class="headerlink" href="#support-vector-machines-svm" title="Permalink to this headline">¶</a></h2>
 <p>SVM are based kernel methods require only a user-specified kernel
@@ -67,9 +67,9 @@ training points.</p>
 </li>
 <li><p>Predict a new point <span class="math notranslate nohighlight">\(x\)</span> using the decision function.</p></li>
 </ol>
-<div class="figure align-default" id="id25">
+<div class="figure align-default" id="id1">
 <img alt="Support Vector Machines." src="../_images/svm_rbf_kernel_mapping_and_decision_function.png" />
-<p class="caption"><span class="caption-text">Support Vector Machines.</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Support Vector Machines.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="gaussian-kernel-rbf-radial-basis-function">
 <h3>Gaussian kernel (RBF, Radial Basis Function):<a class="headerlink" href="#gaussian-kernel-rbf-radial-basis-function" title="Permalink to this headline">¶</a></h3>
@@ -83,16 +83,16 @@ similarity measure as it decreases with squared Euclidean distance
 between the two feature vectors.</p>
 <p>Non linear SVM also exists for regression problems.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;once&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="c1">#import warnings</span>
+<span class="c1">#warnings.filterwarnings(action=&#39;once&#39;)</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># dataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dataset</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                                     <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                     <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -111,19 +111,7 @@ between the two feature vectors.</p>
 <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">clf</span><span class="o">.</span><span class="n">support_</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">)</span>
 </pre></div>
 </div>
-<pre class="literal-block">/home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: <cite>should_run_async</cite> will not call <cite>transform_cell</cite> automatically in the future. Please pass the result to <cite>transformed_cell</cite> argument and any exception that happen during thetransform in <cite>preprocessing_exc_tuple</cite> in IPython 7.17 and above.
-  and should_run_async(code)
-/home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-  return f(<a href="#id1"><span class="problematic" id="id2">*</span></a>args, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwds)
-/home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-  return f(<a href="#id5"><span class="problematic" id="id6">*</span></a>args, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwds)
-/home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-  return f(<a href="#id9"><span class="problematic" id="id10">*</span></a>args, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwds)</pre>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Errors: 0</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">7</span><span class="o">/</span><span class="n">importlib</span><span class="o">/</span><span class="n">_bootstrap</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">219</span><span class="p">:</span> <span class="ne">RuntimeWarning</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ufunc</span> <span class="n">size</span> <span class="n">changed</span><span class="p">,</span> <span class="n">may</span> <span class="n">indicate</span> <span class="n">binary</span> <span class="n">incompatibility</span><span class="o">.</span> <span class="n">Expected</span> <span class="mi">192</span> <span class="kn">from</span> <span class="nn">C</span> <span class="n">header</span><span class="p">,</span> <span class="n">got</span> <span class="mi">216</span> <span class="kn">from</span> <span class="nn">PyObject</span>
-  <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
@@ -145,9 +133,9 @@ called recursive partitioning. The recursion is completed when the
 subset at a node has all the same value of the target variable, or when
 splitting no longer adds value to the predictions. This general
 principle is implemented by many recursive partitioning tree algorithms.</p>
-<div class="figure align-default" id="id26">
+<div class="figure align-default" id="id2">
 <img alt="Classification tree." src="../_images/classification_tree.jpg" />
-<p class="caption"><span class="caption-text">Classification tree.</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Classification tree.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>Decision trees are simple to understand and interpret however they tend
 to overfit the data. However decision trees tend to overfit the training
@@ -181,12 +169,6 @@ features selected at every node</p></li>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Errors: 0</span>
 </pre></div>
 </div>
-<pre class="literal-block">/home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: <cite>should_run_async</cite> will not call <cite>transform_cell</cite> automatically in the future. Please pass the result to <cite>transformed_cell</cite> argument and any exception that happen during thetransform in <cite>preprocessing_exc_tuple</cite> in IPython 7.17 and above.
-  and should_run_async(code)
-/home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-  return f(<a href="#id17"><span class="problematic" id="id18">*</span></a>args, <a href="#id19"><span class="problematic" id="id20">**</span></a>kwds)
-/home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-  return f(<a href="#id21"><span class="problematic" id="id22">*</span></a>args, <a href="#id23"><span class="problematic" id="id24">**</span></a>kwds)</pre>
 </div>
 <div class="section" id="extra-trees-low-variance">
 <h2>Extra Trees (Low Variance)<a class="headerlink" href="#extra-trees-low-variance" title="Permalink to this headline">¶</a></h2>
@@ -245,28 +227,28 @@ observations. ExtraTrees is named for (Extremely Randomized Trees).</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">data visualization: Matplotlib &amp; Seaborn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time Series in python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="decomposition.html">Linear dimension reduction and feature extraction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="manifold.html">Manifold learning: non-linear dimension reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linear_regression.html">Linear methods for regression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear classification</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Non linear learning algorithms</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-linear models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#support-vector-machines-svm">Support Vector Machines (SVM)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#decision-tree">Decision tree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#random-forest">Random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#extra-trees-low-variance">Extra Trees (Low Variance)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="resampling.html">Resampling Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">Resampling methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
@@ -282,8 +264,8 @@ observations. ExtraTrees is named for (Extremely Randomized Trees).</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="linear_classification.html" title="previous chapter">Linear classification</a></li>
-      <li>Next: <a href="resampling.html" title="next chapter">Resampling Methods</a></li>
+      <li>Previous: <a href="linear_classification.html" title="previous chapter">Linear models for classification problems</a></li>
+      <li>Next: <a href="resampling.html" title="next chapter">Resampling methods</a></li>
   </ul></li>
 </ul>
 </div>

@@ -1,4 +1,4 @@
-Resampling Methods
+Resampling methods
 ==================
 
 .. code:: ipython3

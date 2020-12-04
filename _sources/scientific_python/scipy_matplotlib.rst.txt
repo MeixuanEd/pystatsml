@@ -1,4 +1,4 @@
-data visualization: Matplotlib & Seaborn
+Data visualization: matplotlib & seaborn
 ========================================
 
 Basic plots

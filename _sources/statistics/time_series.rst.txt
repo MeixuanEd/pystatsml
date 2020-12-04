@@ -1,4 +1,4 @@
-Time Series in python
+Time series in python
 =====================
 
 Two libraries:
@@ -26,7 +26,7 @@ non-stationaruty of a TS:
    have a tendency to buy cars in a particular month because of pay
    increment or festivals.
 
-Pandas Time Series Data Structure
+Pandas time series data structure
 ---------------------------------
 
 A Series is similar to a list or an array in Python. It represents a
@@ -36,9 +36,15 @@ a more powerful version of a list.
 
 .. code:: ipython3
 
-    import pandas as pd
-    import numpy as np
+    %matplotlib inline
     
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+.. code:: ipython3
+
     # Create a Series from a list
     ser = pd.Series([1, 3])
     print(ser)
@@ -70,7 +76,7 @@ a more powerful version of a list.
     2
 
 
-Time Series Analysis of Google Trends
+Time series analysis of Google trends
 -------------------------------------
 
 source:
@@ -99,17 +105,6 @@ Read data
 
 .. code:: ipython3
 
-    import numpy as np
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    
-    # Plot appears on its own windows
-    %matplotlib inline
-    # Tools / Preferences / Ipython Console  / Graphics  / Graphics Backend / Backend: “automatic”
-    # Interactive Matplotlib Jupyter Notebook
-    # %matplotlib inline
-    
     try:
         url = "https://raw.githubusercontent.com/datacamp/datacamp_facebook_live_ny_resolution/master/datasets/multiTimeline.csv"
         df = pd.read_csv(url, skiprows=2)
@@ -180,7 +175,7 @@ original index and set it to the ‘month’ column.
     2004-05-01    72   22       43
 
 
-Exploratory Data Analysis
+Exploratory data analysis
 -------------------------
 
 You can use a built-in pandas visualization method .plot() to plot your
@@ -201,15 +196,7 @@ data as 3 line plots on a single figure (one for each column, namely,
 
 
 
-
-.. parsed-literal::
-
-    Text(0.5, 0, 'Year')
-
-
-
-
-.. image:: time_series_files/time_series_7_1.png
+.. image:: time_series_files/time_series_8_0.png
 
 
 Note that this data is relative. As you can read on Google trends:
@@ -220,7 +207,7 @@ popularity for the term. A value of 50 means that the term is half as
 popular. Likewise a score of 0 means the term was less than 1% as
 popular as the peak.
 
-Resampling, Smoothing, Windowing, Rolling average: Trends
+Resampling, smoothing, windowing, rolling average: trends
 ---------------------------------------------------------
 
 Rolling average, for each time point, take the average of the points on
@@ -249,12 +236,12 @@ See: http://pandas.pydata.org/pandas-docs/stable/timeseries.html A:
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7f2a045af0d0>
+    <matplotlib.legend.Legend at 0x7f670db34a10>
 
 
 
 
-.. image:: time_series_files/time_series_9_1.png
+.. image:: time_series_files/time_series_10_1.png
 
 
 Rolling average (smoothing) with Numpy
@@ -274,12 +261,12 @@ Rolling average (smoothing) with Numpy
 
 .. parsed-literal::
 
-    [<matplotlib.lines.Line2D at 0x7f2a0021ee90>]
+    [<matplotlib.lines.Line2D at 0x7f670cbbb1d0>]
 
 
 
 
-.. image:: time_series_files/time_series_11_1.png
+.. image:: time_series_files/time_series_12_1.png
 
 
 Trends Plot Diet and Gym
@@ -305,7 +292,7 @@ data
 
 
 
-.. image:: time_series_files/time_series_13_1.png
+.. image:: time_series_files/time_series_14_1.png
 
 
 Detrending
@@ -326,10 +313,10 @@ Detrending
 
 
 
-.. image:: time_series_files/time_series_15_1.png
+.. image:: time_series_files/time_series_16_1.png
 
 
-First-order differencing: Seasonal Patterns
+First-order differencing: seasonal patterns
 -------------------------------------------
 
 .. code:: ipython3
@@ -351,10 +338,10 @@ First-order differencing: Seasonal Patterns
 
 
 
-.. image:: time_series_files/time_series_17_1.png
+.. image:: time_series_files/time_series_18_1.png
 
 
-Periodicity and Correlation
+Periodicity and correlation
 ---------------------------
 
 .. code:: ipython3
@@ -373,26 +360,22 @@ Periodicity and Correlation
 
 
 
-.. image:: time_series_files/time_series_19_1.png
+.. image:: time_series_files/time_series_20_1.png
 
 
 Plot correlation matrix
 
 .. code:: ipython3
 
-    sns.heatmap(df.corr(), cmap="coolwarm")
-
-
+    print(df.corr())
 
 
 .. parsed-literal::
 
-    <AxesSubplot:>
-
-
-
-
-.. image:: time_series_files/time_series_21_1.png
+                 diet       gym   finance
+    diet     1.000000 -0.100764 -0.034639
+    gym     -0.100764  1.000000 -0.284279
+    finance -0.034639 -0.284279  1.000000
 
 
 ‘diet’ and ‘gym’ are negatively correlated! Remember that you have a
@@ -424,26 +407,22 @@ these time series
 
 
 
-.. image:: time_series_files/time_series_23_1.png
+.. image:: time_series_files/time_series_24_1.png
 
 
 Plot correlation matrix
 
 .. code:: ipython3
 
-    sns.heatmap(df.diff().corr(), cmap="coolwarm")
-
-
+    print(df.diff().corr())
 
 
 .. parsed-literal::
 
-    <AxesSubplot:>
-
-
-
-
-.. image:: time_series_files/time_series_25_1.png
+                 diet       gym   finance
+    diet     1.000000  0.758707  0.373828
+    gym      0.758707  1.000000  0.301111
+    finance  0.373828  0.301111  1.000000
 
 
 Decomposing time serie in trend, seasonality and residuals
@@ -476,7 +455,7 @@ Decomposing time serie in trend, seasonality and residuals
 
 
 
-.. image:: time_series_files/time_series_27_0.png
+.. image:: time_series_files/time_series_28_0.png
 
 
 Autocorrelation
@@ -508,7 +487,7 @@ Plot
 
 
 
-.. image:: time_series_files/time_series_29_1.png
+.. image:: time_series_files/time_series_30_1.png
 
 
 Compute Autocorrelation Function (ACF)
@@ -518,15 +497,9 @@ Compute Autocorrelation Function (ACF)
     from statsmodels.tsa.stattools import acf
     
     x_diff = x.diff().dropna() # first item is NA
-    lag_acf = acf(x_diff, nlags=36)
+    lag_acf = acf(x_diff, nlags=36, fft=True)
     plt.plot(lag_acf)
     plt.title('Autocorrelation Function')
-
-
-.. parsed-literal::
-
-    /home/ed203246/anaconda3/lib/python3.7/site-packages/statsmodels/tsa/stattools.py:666: FutureWarning: fft=True will become the default after the release of the 0.12 release of statsmodels. To suppress this warning, explicitly set fft=False.
-      FutureWarning,
 
 
 
@@ -538,13 +511,13 @@ Compute Autocorrelation Function (ACF)
 
 
 
-.. image:: time_series_files/time_series_31_2.png
+.. image:: time_series_files/time_series_32_1.png
 
 
 ACF peaks every 12 months: Time series is correlated with itself shifted
 by 12 months.
 
-Time Series Forecasting with Python using Autoregressive Moving Average (ARMA) models
+Time series forecasting with Python using Autoregressive Moving Average (ARMA) models
 -------------------------------------------------------------------------------------
 
 Source:
@@ -591,7 +564,7 @@ explained by lags 1 to 4.
     x_diff = x.diff().dropna() # first item is NA
     # ACF and PACF plots:
     
-    lag_acf = acf(x_diff, nlags=20)
+    lag_acf = acf(x_diff, nlags=20, fft=True)
     lag_pacf = pacf(x_diff, nlags=20, method='ols')
     
     #Plot ACF:
@@ -612,14 +585,8 @@ explained by lags 1 to 4.
     plt.tight_layout()
 
 
-.. parsed-literal::
 
-    /home/ed203246/anaconda3/lib/python3.7/site-packages/statsmodels/tsa/stattools.py:666: FutureWarning: fft=True will become the default after the release of the 0.12 release of statsmodels. To suppress this warning, explicitly set fft=False.
-      FutureWarning,
-
-
-
-.. image:: time_series_files/time_series_33_1.png
+.. image:: time_series_files/time_series_34_0.png
 
 
 In this plot, the two dotted lines on either sides of 0 are the
@@ -647,6 +614,7 @@ Fit ARMA model with statsmodels
 .. code:: ipython3
 
     from statsmodels.tsa.arima_model import ARMA
+    # from statsmodels.tsa.arima.model import ARIMA
     
     model = ARMA(x, order=(1, 1)).fit() # fit model
     
@@ -688,8 +656,8 @@ Fit ARMA model with statsmodels
     Dep. Variable:                    gym   No. Observations:                  168
     Model:                     ARMA(1, 1)   Log Likelihood                -436.852
     Method:                       css-mle   S.D. of innovations              3.229
-    Date:                Mon, 12 Oct 2020   AIC                            881.704
-    Time:                        00:54:34   BIC                            894.200
+    Date:                Fri, 04 Dec 2020   AIC                            881.704
+    Time:                        13:05:20   BIC                            894.200
     Sample:                    01-01-2004   HQIC                           886.776
                              - 12-01-2017                                         
     ==============================================================================
@@ -716,6 +684,6 @@ Fit ARMA model with statsmodels
 
 
 
-.. image:: time_series_files/time_series_35_3.png
+.. image:: time_series_files/time_series_36_3.png
 
 

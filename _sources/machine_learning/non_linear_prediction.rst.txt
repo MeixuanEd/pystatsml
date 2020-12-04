@@ -1,5 +1,5 @@
-Non linear learning algorithms
-==============================
+Non-linear models
+=================
 
 Support Vector Machines (SVM)
 -----------------------------
@@ -65,16 +65,16 @@ Non linear SVM also exists for regression problems.
 .. code:: ipython3
 
     %matplotlib inline
-    import warnings
-    warnings.filterwarnings(action='once')
-
-.. code:: ipython3
-
+    #import warnings
+    #warnings.filterwarnings(action='once')
+    import matplotlib.pyplot as plt
+    
     import numpy as np
     from sklearn.svm import SVC
     from sklearn import datasets
-    import matplotlib.pyplot as plt
-    
+
+.. code:: ipython3
+
     # dataset
     X, y = datasets.make_classification(n_samples=10, n_features=2,n_redundant=0,
                                         n_classes=2,
@@ -96,25 +96,7 @@ Non linear SVM also exists for regression problems.
 
 .. parsed-literal::
 
-    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
-      and should_run_async(code)
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
-
-
-.. parsed-literal::
-
     #Errors: 0
-
-
-.. parsed-literal::
-
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
 
 
 
@@ -185,16 +167,6 @@ randomness by:
 .. parsed-literal::
 
     #Errors: 0
-
-
-.. parsed-literal::
-
-    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
-      and should_run_async(code)
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
-    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
-      return f(*args, **kwds)
 
 
 Extra Trees (Low Variance)
