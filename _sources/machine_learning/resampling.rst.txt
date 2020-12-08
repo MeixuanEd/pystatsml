@@ -179,7 +179,7 @@ split) out of it:
     23     64          16    20
     24     64          16    20
     Nb runs: 25 (nb outer folds x nb inner folds)
-    CV R2:0.58
+    CV R2:0.70
 
 
 Cross-Validation (CV)
@@ -851,6 +851,23 @@ Random permutations
     Coeficients p-values: [0.001 0.001 0.098 0.573 0.627]
 
 
+Compute p-values corrected for multiple comparisons using max-T
+(Westfall and Young, 1993) FWER
+
+.. code:: ipython3
+
+    pval_coef_perm_tmax = np.array([np.sum(coefs_perm.max(axis=1) >= coefs_perm[0, j])
+                                    for j in range(coefs_perm.shape[1])]) / coefs_perm.shape[0]
+    print("P-values with FWER (Westfall and Young) correction")
+    print(pval_coef_perm_tmax)
+
+
+.. parsed-literal::
+
+    P-values with FWER (Westfall and Young) correction
+    [0.000999   0.000999   0.41058941 0.98001998 0.99200799]
+
+
 .. code:: ipython3
 
     # Plot distribution of third coefficient under null-hypothesis
@@ -868,7 +885,7 @@ Random permutations
 
 
 
-.. image:: resampling_files/resampling_48_0.png
+.. image:: resampling_files/resampling_50_0.png
 
 
 Exercise
@@ -894,7 +911,8 @@ dataset. It aims to:
 
 1. Assess the variability (standard error, `confidence
    intervals. <https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals>`__)
-   of performances scores or estimated parameters.
+   of performances scores or estimated parameters (see Efron et
+   al. 1986).
 2. Regularize model by fitting several models on bootstrap samples and
    averaging their predictions (see Baging and random-forest).
 
@@ -909,6 +927,13 @@ correlation coefficients.
 3. Assess standard errors and confidence intervals of scores using the
    scores obtained on the :math:`B` resampled dataset. Or, average
    models predictions.
+
+References:
+
+`Efron B, Tibshirani R. Bootstrap methods for standard errors,
+confidence intervals, and other measures of statistical accuracy. Stat
+Sci
+1986;1:54–75 <https://projecteuclid.org/download/pdf_1/euclid.ss/1177013815>`__
 
 .. code:: ipython3
 
@@ -960,3 +985,4 @@ correlation coefficients.
     max      1.204006    1.449672    0.432764    0.220711    0.290928
 
 
+Plot mean / CI
