@@ -107,11 +107,14 @@ decreases with squared Euclidean distance between the two feature vectors.</p>
 <p>Non linear SVM also exists for regression problems.</p>
 <p>dataset</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_breast_cancer</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> \
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Preprocessing: unequal variance of input features, requires scaling for svm.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;kde&quot;</span><span class="p">,</span> <span class="n">bw_adjust</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabels</span><span class="p">(</span><span class="s2">&quot;Std-dev&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
 <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
@@ -126,16 +129,11 @@ Probalility is a logistic of the decision_function</p>
 <span class="n">y_score</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">y_prob</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
 
-
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">y_score</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_prob</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;decision function&quot;</span><span class="p">,</span> <span class="s2">&quot;Probability&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">relplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">y_score</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_prob</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="s2">&quot;decision function&quot;</span><span class="p">,</span> <span class="s2">&quot;Probability&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_ml_supervized_nonlinear_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_ml_supervized_nonlinear_002.png" />
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid object at 0x7fc60854fc10&gt;
-</pre></div>
-</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bAcc: </span><span class="si">%.2f</span><span class="s2">, AUC: </span><span class="si">%.2f</span><span class="s2"> (AUC with proba: </span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
       <span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred</span><span class="p">),</span>
       <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_score</span><span class="o">=</span><span class="n">y_score</span><span class="p">),</span>
@@ -160,7 +158,7 @@ True
 Each internal node represents a “test” on an feature resulting on the split of the current sample. At each step the algorithm selects the feature and a cutoff value that maximises a given metric. Different metrics exist for regression tree (target is continuous) or classification tree (the target is qualitative).
 This process is repeated on each derived subset in a recursive manner called recursive partitioning. The recursion is completed when the subset at a node has all the same value of the target variable, or when splitting no longer adds value to the predictions. This general principle is implemented by many recursive partitioning tree algorithms.</p>
 <div class="figure align-default">
-<img alt="Classification tree." src="../_images/classification_tree1.jpg" />
+<a class="reference internal image-reference" href="../_images/classification_tree.png"><img alt="Classification tree." src="../_images/classification_tree.png" style="width: 400px;" /></a>
 </div>
 <p>Decision trees are simple to understand and interpret however they tend to overfit the data. However decision trees tend to overfit the training set.  Leo Breiman propose random forest to deal with this issue.</p>
 <p>A single decision tree is usually overfits the data it is learning from because it learn from only one pathway of decisions. Predictions from a single decision tree usually don’t make accurate predictions on new data.</p>
@@ -169,6 +167,9 @@ This process is repeated on each derived subset in a recursive manner called rec
 <h3>Forest<a class="headerlink" href="#forest" title="Permalink to this headline">¶</a></h3>
 <p>A random forest is a meta estimator that fits a number of <strong>decision tree learners</strong> on various sub-samples of the dataset and use averaging to improve the predictive accuracy and control over-fitting.
 Random forest models reduce the risk of overfitting by introducing randomness by:</p>
+<div class="figure align-default">
+<a class="reference internal image-reference" href="../_images/random_forest.png"><img alt="Random forest." src="../_images/random_forest.png" style="width: 300px;" /></a>
+</div>
 <ul class="simple">
 <li><p>building multiple trees (n_estimators)</p></li>
 <li><p>drawing observations with replacement (i.e., a bootstrapped sample)</p></li>
@@ -189,7 +190,7 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.99
 </pre></div>
 </div>
 <p>Extra Trees (Low Variance)</p>
@@ -220,7 +221,7 @@ ExtraTrees is named for (Extremely Randomized Trees).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.043 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.127 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-ml-supervized-nonlinear-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/b52f01a0ac65cf2d2acfca70f23f792c/ml_supervized_nonlinear.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ml_supervized_nonlinear.py</span></code></a></p>

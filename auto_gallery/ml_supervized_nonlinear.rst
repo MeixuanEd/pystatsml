@@ -100,7 +100,8 @@ dataset
 
 
     X, y = datasets.load_breast_cancer(return_X_y=True)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, stratify=y, random_state=42)
+    X_train, X_test, y_train, y_test = \
+        train_test_split(X, y, test_size=0.5, stratify=y, random_state=42)
 
 
 
@@ -115,7 +116,9 @@ Preprocessing: unequal variance of input features, requires scaling for svm.
 .. code-block:: default
 
 
-    plt.hist(X_train.std(axis=0))
+    ax = sns.displot(x=X_train.std(axis=0), kind="kde", bw_adjust=.2, cut=0,
+                     fill=True, height=3, aspect=1.5,)
+    _ = ax.set_xlabels("Std-dev").tight_layout()
 
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
@@ -143,9 +146,8 @@ Probalility is a logistic of the decision_function
     y_score = svm.decision_function(X_test)
     y_prob = svm.predict_proba(X_test)[:, 1]
 
-
-    ax = sns.relplot(x=y_score, y=y_prob, hue=y_pred)
-    ax.set_axis_labels("decision function", "Probability")
+    ax = sns.relplot(x=y_score, y=y_prob, hue=y_pred, height=2, aspect=1.5)
+    _ = ax.set_axis_labels("decision function", "Probability").tight_layout()
 
 
 
@@ -154,14 +156,6 @@ Probalility is a logistic of the decision_function
     :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    <seaborn.axisgrid.FacetGrid object at 0x7fc60854fc10>
 
 
 
@@ -204,7 +198,8 @@ A tree can be "learned" by splitting the training dataset into subsets based on 
 Each internal node represents a "test" on an feature resulting on the split of the current sample. At each step the algorithm selects the feature and a cutoff value that maximises a given metric. Different metrics exist for regression tree (target is continuous) or classification tree (the target is qualitative).
 This process is repeated on each derived subset in a recursive manner called recursive partitioning. The recursion is completed when the subset at a node has all the same value of the target variable, or when splitting no longer adds value to the predictions. This general principle is implemented by many recursive partitioning tree algorithms.
 
-.. figure:: ../images/classification_tree.jpg
+.. figure:: ../images/classification_tree.png
+   :width: 400
    :alt: Classification tree.
 
 Decision trees are simple to understand and interpret however they tend to overfit the data. However decision trees tend to overfit the training set.  Leo Breiman propose random forest to deal with this issue.
@@ -216,6 +211,10 @@ Forest
 
 A random forest is a meta estimator that fits a number of **decision tree learners** on various sub-samples of the dataset and use averaging to improve the predictive accuracy and control over-fitting.
 Random forest models reduce the risk of overfitting by introducing randomness by:
+
+.. figure:: ../images/random_forest.png
+   :width: 300
+   :alt: Random forest.
 
 - building multiple trees (n_estimators)
 - drawing observations with replacement (i.e., a bootstrapped sample)
@@ -260,7 +259,7 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 
  .. code-block:: none
 
-    bAcc: 0.94, AUC: 0.98 
+    bAcc: 0.94, AUC: 0.99 
 
 
 
@@ -310,7 +309,7 @@ Gradient boosting
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.043 seconds)
+   **Total running time of the script:** ( 0 minutes  1.127 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_ml_supervized_nonlinear.py:
