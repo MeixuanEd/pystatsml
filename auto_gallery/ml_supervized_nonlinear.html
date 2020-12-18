@@ -15,6 +15,9 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Resampling methods" href="ml_resampling.html" />
@@ -190,7 +193,7 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.99
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
 </pre></div>
 </div>
 <p>Extra Trees (Low Variance)</p>
@@ -203,6 +206,20 @@ ExtraTrees is named for (Extremely Randomized Trees).</p>
 </div>
 <div class="section" id="gradient-boosting">
 <h2>Gradient boosting<a class="headerlink" href="#gradient-boosting" title="Permalink to this headline">¶</a></h2>
+<p>Gradient boosting is a meta estimator that fits a sequence of <strong>weak learners</strong>.
+Each learner aims to reduce the residuals (errors) produced by the previous learner.
+The two main hyper-parameters are:</p>
+<ul class="simple">
+<li><p>The <strong>learning rate</strong> (<em>lr</em>) controls over-fitting:
+decreasing the <em>lr</em> limits the capacity of a learner to overfit the residuals, ie,
+it slows down the learning speed and thus increases the <strong>regularisation</strong>.</p></li>
+<li><p>The <strong>sub-sampling fraction</strong> controls the fraction of samples to be used for
+fitting the learners. Values smaller than 1 leads to <strong>Stochastic Gradient Boosting</strong>.
+It thus controls for over-fitting reducing variance and incresing bias.</p></li>
+</ul>
+<div class="figure align-default">
+<a class="reference internal image-reference" href="../_images/gradient_boosting.png"><img alt="Gradient boosting." src="../_images/gradient_boosting.png" style="width: 500px;" /></a>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
 
 <span class="n">gb</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
@@ -221,7 +238,7 @@ ExtraTrees is named for (Extremely Randomized Trees).</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.127 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.060 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-ml-supervized-nonlinear-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/b52f01a0ac65cf2d2acfca70f23f792c/ml_supervized_nonlinear.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ml_supervized_nonlinear.py</span></code></a></p>
@@ -340,7 +357,7 @@ ExtraTrees is named for (Extremely Randomized Trees).</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2019, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

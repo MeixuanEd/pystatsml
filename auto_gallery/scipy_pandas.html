@@ -15,6 +15,9 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Data visualization: matplotlib &amp; seaborn" href="../scientific_python/scipy_matplotlib.html" />
@@ -93,8 +96,27 @@ object.</p></li>
 <h2>Combining DataFrames<a class="headerlink" href="#combining-dataframes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="concatenate-dataframe">
 <h3>Concatenate DataFrame<a class="headerlink" href="#concatenate-dataframe" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user2</span><span class="p">)</span>
-<span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">,</span> <span class="n">user3</span><span class="p">])</span>
+<p>Concatenate columns (axis = 1).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="p">[</span><span class="mf">1.65</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">user1</span><span class="p">,</span> <span class="n">height</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender      job
+0  alice   19      F  student
+1   john   26      M  student
+    height
+0    1.65
+1    1.80
+    name  age gender      job  height
+0  alice   19      F  student    1.65
+1   john   26      M  student    1.80
+</pre></div>
+</div>
+<p>Concatenate rows (default: axis = 0)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">,</span> <span class="n">user3</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -108,7 +130,68 @@ object.</p></li>
 1  julie   44      F  scientist
 </pre></div>
 </div>
+<p>Concatenate rows: append</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user2</span><span class="p">)</span>
+</pre></div>
 </div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br />
+<br /></div>
 <div class="section" id="join-dataframe">
 <h3>Join DataFrame<a class="headerlink" href="#join-dataframe" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;alice&#39;</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">,</span> <span class="s1">&#39;eric&#39;</span><span class="p">,</span> <span class="s1">&#39;julie&#39;</span><span class="p">],</span>
@@ -332,9 +415,9 @@ peter     33      M    NaN   engineer
     </tr>
     <tr>
       <th>top</th>
-      <td>peter</td>
+      <td>alice</td>
       <td>NaN</td>
-      <td>M</td>
+      <td>F</td>
       <td>student</td>
       <td>NaN</td>
     </tr>
@@ -784,7 +867,7 @@ max    58.000000  180.000000
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>        name        age gender      job      height
 count      6   6.000000      6        6    4.000000
 unique     6        NaN      2        4         NaN
-top     john        NaN      M  student         NaN
+top     eric        NaN      F  student         NaN
 freq       1        NaN      3        3         NaN
 mean     NaN  33.666667    NaN      NaN  172.750000
 std      NaN  14.895189    NaN      NaN    6.344289
@@ -796,7 +879,7 @@ max      NaN  58.000000    NaN      NaN  180.000000
         name gender      job
 count      6      6        6
 unique     6      2        4
-top     john      M  student
+top     eric      F  student
 freq       1      3        3
 </pre></div>
 </div>
@@ -821,13 +904,13 @@ manager      58.000000
 scientist    44.000000
 student      22.333333
 Name: age, dtype: float64
-           name                                                         age             ... gender           height
-          count unique    top freq mean  std  min  25%  50%  75%  max count unique top  ...    50%  75%  max  count unique top freq        mean       std    min    25%    50%    75%    max
-job                                                                                     ...
-engineer      1      1  peter    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    0.0    NaN NaN  NaN         NaN       NaN    NaN    NaN    NaN    NaN    NaN
-manager       1      1   paul    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    0.0    NaN NaN  NaN         NaN       NaN    NaN    NaN    NaN    NaN    NaN
-scientist     1      1  julie    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    1.0    NaN NaN  NaN  171.000000       NaN  171.0  171.0  171.0  171.0  171.0
-student       3      3  alice    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   3.0    NaN NaN  ...    NaN  NaN  NaN    3.0    NaN NaN  NaN  173.333333  7.637626  165.0  170.0  175.0  177.5  180.0
+           name                               ...    height
+          count unique    top freq mean  std  ...       std    min    25%    50%    75%    max
+job                                           ...
+engineer      1      1  peter    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+manager       1      1   paul    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+scientist     1      1  julie    1  NaN  NaN  ...       NaN  171.0  171.0  171.0  171.0  171.0
+student       3      3   john    1  NaN  NaN  ...  7.637626  165.0  170.0  175.0  177.5  180.0
 
 [4 rows x 44 columns]
 </pre></div>
@@ -1008,6 +1091,71 @@ dtype: int64
 </div>
 </div>
 </div>
+<div class="section" id="operation-multiplication">
+<h2>Operation: multiplication<a class="headerlink" href="#operation-multiplication" title="Permalink to this headline">¶</a></h2>
+<p>Multiplication of dataframe and other, element-wise</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>   random   name  age gender        job  height
+0       0  alice   19      F    student   165.0
+1       1   john   26      M    student   180.0
+2       2   eric   22      M    student   175.0
+5       3  julie   44      F  scientist   171.0
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>26</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>44</td>
+      <td>350.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>132</td>
+      <td>513.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br />
+<br /></div>
 <div class="section" id="renaming">
 <h2>Renaming<a class="headerlink" href="#renaming" title="Permalink to this headline">¶</a></h2>
 <p>Rename columns</p>
@@ -1118,7 +1266,7 @@ Exclude data outside 3 standard-deviations:
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>248.48963819938044
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>252.44516561209866
 </pre></div>
 </div>
 </div>
@@ -1134,7 +1282,7 @@ Exclude data outside 3 standard-deviations:
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>173.80000467192673 178.7023568870694
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>178.7392254533992 179.2280004760059
 </pre></div>
 </div>
 </div>
@@ -1512,7 +1660,7 @@ Exclude data outside 3 standard-deviations:
 value of numerical column with the mean of the current columns.</p>
 <p>2. Save the original users and “imputed” frame in a single excel file
 “users.xlsx” with 2 sheets: original, imputed.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.794 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.994 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-scipy-pandas-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/4e66d1e5bdd8321ce16a6e7d776403ca/scipy_pandas.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">scipy_pandas.py</span></code></a></p>
@@ -1579,6 +1727,7 @@ value of numerical column with the mean of the current columns.</p>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Sorting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#descriptive-statistics">Descriptive statistics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quality-check">Quality check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operation-multiplication">Operation: multiplication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#renaming">Renaming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-outliers">Dealing with outliers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#file-i-o">File I/O</a></li>
@@ -1644,7 +1793,7 @@ value of numerical column with the mean of the current columns.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2019, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

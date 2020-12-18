@@ -90,14 +90,48 @@ Combining DataFrames
 Concatenate DataFrame
 ~~~~~~~~~~~~~~~~~~~~~
 
+Concatenate columns (axis = 1).
+
 
 .. code-block:: default
 
 
-    user1.append(user2)
+    height = pd.DataFrame(dict(height=[1.65, 1.8]))
+    print(user1, "\n", height)
+
+    print(pd.concat([user1, height], axis=1))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+        name  age gender      job
+    0  alice   19      F  student
+    1   john   26      M  student 
+        height
+    0    1.65
+    1    1.80
+        name  age gender      job  height
+    0  alice   19      F  student    1.65
+    1   john   26      M  student    1.80
+
+
+
+
+Concatenate rows (default: axis = 0)
+
+
+.. code-block:: default
+
+
     users = pd.concat([user1, user2, user3])
     print(users)
-
 
 
 
@@ -119,6 +153,83 @@ Concatenate DataFrame
 
 
 
+
+Concatenate rows: append
+
+
+.. code-block:: default
+
+
+    user1.append(user2)
+
+
+
+
+
+
+
+.. only:: builder_html
+
+    .. raw:: html
+
+        <div>
+        <style scoped>
+            .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+            }
+
+            .dataframe tbody tr th {
+                vertical-align: top;
+            }
+
+            .dataframe thead th {
+                text-align: right;
+            }
+        </style>
+        <table border="1" class="dataframe">
+          <thead>
+            <tr style="text-align: right;">
+              <th></th>
+              <th>name</th>
+              <th>age</th>
+              <th>gender</th>
+              <th>job</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>0</th>
+              <td>alice</td>
+              <td>19</td>
+              <td>F</td>
+              <td>student</td>
+            </tr>
+            <tr>
+              <th>1</th>
+              <td>john</td>
+              <td>26</td>
+              <td>M</td>
+              <td>student</td>
+            </tr>
+            <tr>
+              <th>0</th>
+              <td>eric</td>
+              <td>22</td>
+              <td>M</td>
+              <td>student</td>
+            </tr>
+            <tr>
+              <th>1</th>
+              <td>paul</td>
+              <td>58</td>
+              <td>F</td>
+              <td>manager</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <br />
+        <br />
 
 Join DataFrame
 ~~~~~~~~~~~~~~
@@ -451,9 +562,9 @@ Descriptive statistics
             </tr>
             <tr>
               <th>top</th>
-              <td>peter</td>
+              <td>alice</td>
               <td>NaN</td>
-              <td>M</td>
+              <td>F</td>
               <td>student</td>
               <td>NaN</td>
             </tr>
@@ -1156,7 +1267,7 @@ Summarize all columns
             name        age gender      job      height
     count      6   6.000000      6        6    4.000000
     unique     6        NaN      2        4         NaN
-    top     john        NaN      M  student         NaN
+    top     eric        NaN      F  student         NaN
     freq       1        NaN      3        3         NaN
     mean     NaN  33.666667    NaN      NaN  172.750000
     std      NaN  14.895189    NaN      NaN    6.344289
@@ -1168,7 +1279,7 @@ Summarize all columns
             name gender      job
     count      6      6        6
     unique     6      2        4
-    top     john      M  student
+    top     eric      F  student
     freq       1      3        3
 
 
@@ -1209,13 +1320,13 @@ Statistics per group (groupby)
     scientist    44.000000
     student      22.333333
     Name: age, dtype: float64
-               name                                                         age             ... gender           height                                                                         
-              count unique    top freq mean  std  min  25%  50%  75%  max count unique top  ...    50%  75%  max  count unique top freq        mean       std    min    25%    50%    75%    max
-    job                                                                                     ...                                                                                                 
-    engineer      1      1  peter    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    0.0    NaN NaN  NaN         NaN       NaN    NaN    NaN    NaN    NaN    NaN
-    manager       1      1   paul    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    0.0    NaN NaN  NaN         NaN       NaN    NaN    NaN    NaN    NaN    NaN
-    scientist     1      1  julie    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   1.0    NaN NaN  ...    NaN  NaN  NaN    1.0    NaN NaN  NaN  171.000000       NaN  171.0  171.0  171.0  171.0  171.0
-    student       3      3  alice    1  NaN  NaN  NaN  NaN  NaN  NaN  NaN   3.0    NaN NaN  ...    NaN  NaN  NaN    3.0    NaN NaN  NaN  173.333333  7.637626  165.0  170.0  175.0  177.5  180.0
+               name                               ...    height                                   
+              count unique    top freq mean  std  ...       std    min    25%    50%    75%    max
+    job                                           ...                                             
+    engineer      1      1  peter    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+    manager       1      1   paul    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+    scientist     1      1  julie    1  NaN  NaN  ...       NaN  171.0  171.0  171.0  171.0  171.0
+    student       3      3   john    1  NaN  NaN  ...  7.637626  165.0  170.0  175.0  177.5  180.0
 
     [4 rows x 44 columns]
 
@@ -1476,6 +1587,91 @@ Strategy 2: fill in missing values
 
 
 
+Operation: multiplication
+-------------------------
+
+Multiplication of dataframe and other, element-wise
+
+
+.. code-block:: default
+
+
+    df = users.dropna()
+    df.insert(0, 'random', np.arange(df.shape[0]))
+    print(df)
+    df[["age", "height"]].multiply(df["random"], axis="index")
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+       random   name  age gender        job  height
+    0       0  alice   19      F    student   165.0
+    1       1   john   26      M    student   180.0
+    2       2   eric   22      M    student   175.0
+    5       3  julie   44      F  scientist   171.0
+
+
+.. only:: builder_html
+
+    .. raw:: html
+
+        <div>
+        <style scoped>
+            .dataframe tbody tr th:only-of-type {
+                vertical-align: middle;
+            }
+
+            .dataframe tbody tr th {
+                vertical-align: top;
+            }
+
+            .dataframe thead th {
+                text-align: right;
+            }
+        </style>
+        <table border="1" class="dataframe">
+          <thead>
+            <tr style="text-align: right;">
+              <th></th>
+              <th>age</th>
+              <th>height</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>0</th>
+              <td>0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>1</th>
+              <td>26</td>
+              <td>180.0</td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <td>44</td>
+              <td>350.0</td>
+            </tr>
+            <tr>
+              <th>5</th>
+              <td>132</td>
+              <td>513.0</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <br />
+        <br />
+
 Renaming
 --------
 
@@ -1639,7 +1835,7 @@ Exclude data outside 3 standard-deviations:
 
  .. code-block:: none
 
-    248.48963819938044
+    252.44516561209866
 
 
 
@@ -1671,7 +1867,7 @@ https://en.wikipedia.org/wiki/Median_absolute_deviation
 
  .. code-block:: none
 
-    173.80000467192673 178.7023568870694
+    178.7392254533992 179.2280004760059
 
 
 
@@ -2171,7 +2367,7 @@ value of numerical column with the mean of the current columns.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.794 seconds)
+   **Total running time of the script:** ( 0 minutes  1.994 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_scipy_pandas.py:

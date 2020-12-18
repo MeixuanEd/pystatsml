@@ -45,6 +45,9 @@ firefox  index.html
 Update
 ```
 WD=~/git/pystatsml
+cd $WD
+make html
+make singlehtml
 cd ~/git/pystatsml_gh-pages
 git checkout gh-pages
 rsync -avu $WD/build/html/* ./

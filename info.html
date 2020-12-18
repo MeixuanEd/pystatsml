@@ -15,6 +15,9 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="_static/opensearch.xml"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -71,6 +74,9 @@
 <p>Update
 <code class="docutils literal notranslate"><span class="pre">`</span>
 <span class="pre">WD=~/git/pystatsml</span>
+<span class="pre">cd</span> <span class="pre">$WD</span>
+<span class="pre">make</span> <span class="pre">html</span>
+<span class="pre">make</span> <span class="pre">singlehtml</span>
 <span class="pre">cd</span> <span class="pre">~/git/pystatsml_gh-pages</span>
 <span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">gh-pages</span>
 <span class="pre">rsync</span> <span class="pre">-avu</span> <span class="pre">$WD/build/html/*</span> <span class="pre">./</span>
@@ -327,7 +333,7 @@ Python&lt;a class=”headerlink” href=”#phantom” title=”Permalink to thi
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2019, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

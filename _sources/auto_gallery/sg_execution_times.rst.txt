@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**00:01.127** total execution time for **auto_gallery** files:
+**00:01.060** total execution time for **auto_gallery** files:
 
 +------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_gallery_ml_supervized_nonlinear.py` (``ml_supervized_nonlinear.py``) | 00:01.127 | 0.0 MB |
+| :ref:`sphx_glr_auto_gallery_ml_supervized_nonlinear.py` (``ml_supervized_nonlinear.py``) | 00:01.060 | 0.0 MB |
 +------------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_auto_gallery_lab_supervized_sklearn.py` (``lab_supervized_sklearn.py``)   | 00:00.000 | 0.0 MB |
 +------------------------------------------------------------------------------------------+-----------+--------+
